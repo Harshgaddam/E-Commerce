@@ -41,6 +41,7 @@ const uploadSingleImage = upload.single("image");
 
 router.post("/", (req, res) => {
   uploadSingleImage(req, res, function (err) {
+    console.log(req.file);
     if (err) {
       res.status(400).send({ message: err.message });
     }

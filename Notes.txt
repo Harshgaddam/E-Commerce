@@ -1,0 +1,5216 @@
+1. Setting up directory
+
+in root directory
+npx create-react-app frontend
+cd frontend
+delete App.test App.css and logo.svg
+
+in frontend/src/App.js
+rewrite the whole code
+rafce to create arrow function component
+
+import React from "react";
+
+const App = () => {
+  return <h1>Welcome to ProShop</h1>;
+};
+
+export default App;
+
+then git init in frontend
+delete .git 
+move ,gitignore to root directory
+
+in .gitignore
+remove / from /nodemodules, so that all nodemodules in sub-directories are also included
+add .env 
+
+in root
+git init
+add remote add origin https://github.com/Harshgaddam/E-Commerce.git
+add, commit and push
+
+
+2. Header and Footer
+
+in frontend
+npm i react-bootstrap bootstrap react-icons
+
+in frontend/src/index.js
+import "bootstrap/dist/css/bootstrap.min.css"; // to include bootstrap
+
+in src > components > Header.js
+
+import { Navbar, Nav, Container } from "react-bootstrap";
+import { FaShoppingCart, FaUser } from "react-icons/fa";
+
+const Header = () => {
+  return (
+    <header>
+      <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
+        <Container>
+          <Navbar.Brand href="/">ProShop</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ms-auto">
+              <Nav.Link href="/cart">
+                <FaShoppingCart /> Cart
+              </Nav.Link>
+              <Nav.Link href="/login">
+                <FaUser /> Sign In
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </header>
+  );
+};
+
+export default Header;
+
+in src > components > Footer.js
+
+import { Container, Row, Col } from "react-bootstrap";
+
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <footer>
+      <Container>
+        <Row>
+          <Col className="text-center py-3">
+            <p>ProShop &copy; {currentYear}</p>
+          </Col>
+        </Row>
+      </Container>
+    </footer>
+  );
+};
+export default Footer;
+
+
+in src > App.js
+
+import { Container } from "react-bootstrap";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+
+const App = () => {
+  return (
+    <>
+      <Header />
+      <main className="py-3">
+        <Container>
+          <h1>Welcome to ProShop</h1>
+        </Container>
+      </main>
+      <Footer />
+    </>
+  );
+};
+
+export default App;
+
+
+3. Product and HomeScreen components
+
+in public > images
+in src > products.js
+
+in components > Product.jsx
+
+import { Card } from "react-bootstrap";
+
+const Product = ({ product }) => {
+  return (
+    <Card className="my-3 p-3 rounded">
+      <a href={`/product/${product._id}`}>
+        <Card.Img src={product.image} variant="top" />
+      </a>
+
+      <Card.Body>
+        <a href={`/product/${product._id}`}>
+          <Card.Title as="div">
+            <strong>{product.name}</strong>
+          </Card.Title>
+        </a>
+
+        <Card.Text as="h3">${product.price}</Card.Text>
+      </Card.Body>
+    </Card>
+  );
+};
+
+export default Product;
+
+in src > screens > HomeScreen.jsx
+
+import { Row, Col } from "react-bootstrap";
+import Product from "../components/Product";
+import products from "../products";
+
+const HomeScreen = () => {
+  return (
+    <>
+      <h1>Latest Products</h1>
+      <Row>
+        {products.map((product) => (
+          <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+            <Product product={product} />
+          </Col>
+        ))}
+      </Row>
+    </>
+  );
+};
+
+export default HomeScreen;
+
+
+4. Implemented react router
+
+in App.js
+
+import Footer from "./components/Footer";
+replace <HomeScreen /> with <Outlet />
+
+in index.js
+
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<App />}>
+      <Route index={true} path="/" element={<HomeScreen />} />
+    </Route>
+  )
+);
+
+replace <App /> with  <RouterProvider router={router} />
+
+
+5. Replace a tag with Link and include Nav.Link into LinkContainer
+
+in components/Header.js
+
+include <Nav.Link> into <LinkContainer to="/path">
+<LinkContainer to="/path">
+    <Nav.Link>
+        <FaShoppingCart /> 
+            Cart
+    </Nav.Link>
+</LinkContainer>
+
+in components/Product.jsx
+
+replace a tags with Link
+<a href="/path"> -> <Link to={"/path"}>
+
+
+6. rating component
+
+in components > Rating.jsx
+
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+
+const Rating = ({ value, text, color }) => {
+  return (
+    <div className="rating">
+      <span>
+        {value >= 1 ? ( <FaStar /> ) : value >= 0.5 ? ( <FaStarHalfAlt /> ) : ( <FaRegStar /> )}
+      </span>
+      <span>
+        <span>
+        {value >= 2 ? ( <FaStar /> ) : value >= 1.5 ? ( <FaStarHalfAlt /> ) : ( <FaRegStar /> )}
+      </span>
+      </span>
+      <span>
+        <span>
+        {value >= 3 ? ( <FaStar /> ) : value >= 2.5 ? ( <FaStarHalfAlt /> ) : ( <FaRegStar /> )}
+      </span>
+      </span>
+      <span>
+        <span>
+        {value >= 4 ? ( <FaStar /> ) : value >= 3.5 ? ( <FaStarHalfAlt /> ) : ( <FaRegStar /> )}
+      </span>
+      </span>
+      <span>
+        <span>
+        {value >= 5 ? ( <FaStar /> ) : value >= 4.5 ? ( <FaStarHalfAlt /> ) : ( <FaRegStar /> )}
+      </span>
+      </span>
+      <span className="rating-text">{text && text}</span>
+    </div>
+  );
+};
+
+export default Rating;
+
+in index.css
+
+.rating span {
+  margin: 0.1rem;
+}
+
+.rating svg {
+  color: #20c997;
+}
+
+in components/product.jsx
+
+import Rating from "./Rating";
+<Card.Text as="div">
+    <Rating
+    value={product.rating}
+    text={`${product.numReviews} reviews`}
+    />
+</Card.Text>
+
+
+7. Implement ProductScreen.jsx
+
+in screens > ProductScreen.jsx
+
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Row, Col, Image, ListGroup, Card, Button } from "react-bootstrap";
+import Rating from "../components/Rating";
+import products from "../products";
+
+const ProductScreen = () => {
+  const { id: productId } = useParams();
+  const product = products.find((p) => p._id === productId);
+
+  return (
+    <>
+      <Link to="/" className="btn btn-light my-3">
+        Go Back
+      </Link>
+      <Row>
+        <Col md={5}>
+          <Image src={product.image} alt={product.name} fluid />
+        </Col>
+        <Col md={4}>
+          <ListGroup variant="flush">
+            <ListGroup.Item>
+              <h3>{product.name}</h3>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Rating
+                value={product.rating}
+                text={`${product.numReviews} reviews`}
+              />
+            </ListGroup.Item>
+            <ListGroup.Item>Price: ${product.price}</ListGroup.Item>
+            <ListGroup.Item>Description: {product.description}</ListGroup.Item>
+          </ListGroup>
+        </Col>
+        <Col md={3}>
+          <Card>
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                <Row>
+                  <Col>Price:</Col>
+                  <Col>
+                    <strong>${product.price}</strong>
+                  </Col>
+                </Row>
+              </ListGroup.Item>
+
+              <ListGroup.Item>
+                <Row>
+                  <Col>Status:</Col>
+                  <Col>
+                    {product.countInStock > 0 ? "In Stock" : "Out Of Stock"}
+                  </Col>
+                </Row>
+              </ListGroup.Item>
+
+              <ListGroup.Item>
+                <Button
+                  className="btn-block"
+                  type="button"
+                  disabled={product.countInStock === 0}
+                >
+                  Add To Cart
+                </Button>
+              </ListGroup.Item>
+            </ListGroup>
+          </Card>
+        </Col>
+      </Row>
+    </>
+  );
+};
+
+export default ProductScreen;
+
+in index.js
+import ProductScreen from "./screens/ProductScreen";
+include into createRoutesFromElements <Route path="/
+product/:id" element={<ProductScreen />} />
+
+
+8. adding backend 
+
+in root > backend > server.js
+
+import express from "express";
+import products from "./backend/data/products.js";
+const port = process.env.PORT || 5000;
+
+const app = express();
+
+app.get("/api/products", (req, res) => {
+  res.json(products);
+});
+
+app.get("/api/products/:id", (req, res) => {
+  const product = products.find((p) => p._id === req.params.id);
+  res.json(product);
+});
+
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
+
+app.listen(port, () => console.log(`Server running on port ${port}`));
+
+in backend > data > products.js (from frontend)
+
+in root
+
+npm init 
+npm i nodemon concurrently -D
+
+in root/package.json
+"type": "module",
+"scripts": {
+  "start": "node backend/server.js",
+  "server": "nodemon backend/server.js",
+  "client": "npm start --prefix frontend",
+  "dev": "concurrently \"npm run server\" \"npm run client\""
+},
+
+
+9. add .env
+
+in root 
+npm i dotenv
+
+in root > .env
+
+NODE_ENV=development
+PORT=5000
+
+in backend/server.js
+
+import dotenv from "dotenv";
+dotenv.config();
+const port = process.env.PORT || 5000;
+
+
+10. fetch products from backend
+
+in frontend 
+
+npm i axios
+
+in frontend/package.json
+
+"proxy": "http://localhost:5000"
+
+in screens/HomeScreens.jsx
+import { useState, useEffect } from "react";
+import axios from "axios";
+const [products, setProducts] = useState([]);
+
+useEffect(() => {
+  const fetchProducts = async () => {
+    const { data } = await axios.get("/api/products");
+    setProducts(data);
+  };
+
+  fetchProducts();
+}, []);
+
+in screens/ProductScreen.jsx
+
+import { useState, useEffect } from "react";
+import axios from "axios";
+const [product, setProduct] = useState({});
+const { id: productId } = useParams();
+
+useEffect(() => {
+  const fetchProduct = async () => {
+    const { data } = await axios.get(`/api/products/${productId}`);
+    setProduct(data);
+  };
+  fetchProduct();
+}, [productId]);
+
+
+11. mongoDB connectivity
+
+in backend > config > db.js
+
+import mongoose from "mongoose";
+
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exit(1);
+  }
+};
+
+export default connectDB;
+
+in backend/server.js
+
+import connectDB from "./config/db.js";
+connectDB();
+
+
+12. Modelling the data
+
+in backend > models > userModel.js
+
+import mongoose from "mongoose";
+
+const userSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    isAdmin: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const User = mongoose.model("User", userSchema);
+
+export default User;
+
+in models > productModel.js
+
+import mongoose from "mongoose";
+
+const reviewSchema = mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    rating: { type: Number, required: true },
+    comment: { type: String, required: true },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const productSchema = mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+      required: true,
+    },
+    brand: {
+      type: String,
+      required: true,
+    },
+    category: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    reviews: [reviewSchema],
+    rating: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    numReviews: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    price: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    countInStock: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const Product = mongoose.model("Product", productSchema);
+
+export default Product;
+
+in models > orderModel.js
+
+import mongoose from "mongoose";
+
+const orderSchema = mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+    orderItems: [
+      {
+        name: { type: String, required: true },
+        qty: { type: Number, required: true },
+        image: { type: String, required: true },
+        price: { type: Number, required: true },
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "Product",
+        },
+      },
+    ],
+    shippingAddress: {
+      address: { type: String, required: true },
+      city: { type: String, required: true },
+      postalCode: { type: String, required: true },
+      country: { type: String, required: true },
+    },
+    paymentMethod: {
+      type: String,
+      required: true,
+    },
+    paymentResult: {
+      id: { type: String },
+      status: { type: String },
+      update_time: { type: String },
+      email_address: { type: String },
+    },
+    itemsPrice: {
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
+    taxPrice: {
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
+    shippingPrice: {
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
+    totalPrice: {
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
+    isPaid: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    paidAt: {
+      type: Date,
+    },
+    isDelivered: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    deliveredAt: {
+      type: Date,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const Order = mongoose.model("Order", orderSchema);
+
+export default Order;
+
+
+13. adding users to db
+
+in backend/data > users.js
+
+import bcrypt from 'bcryptjs';
+
+const users = [
+  {
+    name: 'Admin User',
+    email: 'admin@email.com',
+    password: bcrypt.hashSync('123456', 10),
+    isAdmin: true,
+  },
+  {
+    name: 'John Doe',
+    email: 'john@email.com',
+    password: bcrypt.hashSync('123456', 10),
+  }
+];
+
+export default users;
+
+
+14. data seeding
+
+in backend > seeder.js
+
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import colors from "colors";
+import users from "./data/users.js";
+import products from "./data/products.js";
+import User from "./models/userModel.js";
+import Product from "./models/productModel.js";
+import Order from "./models/orderModel.js";
+import connectDB from "./config/db.js";
+
+dotenv.config();
+
+connectDB();
+
+const importData = async () => {
+  try {
+    await Order.deleteMany();
+    await Product.deleteMany();
+    await User.deleteMany();
+
+    const createdUsers = await User.insertMany(users);
+
+    const adminUser = createdUsers[0]._id;
+
+    const sampleProducts = products.map((product) => {
+      return { ...product, user: adminUser };
+    });
+
+    await Product.insertMany(sampleProducts);
+
+    console.log("Data Imported!".green.inverse);
+    process.exit();
+  } catch (error) {
+    console.error(`${error}`.red.inverse);
+    process.exit(1);
+  }
+};
+
+const destroyData = async () => {
+  try {
+    await Order.deleteMany();
+    await Product.deleteMany();
+    await User.deleteMany();
+
+    console.log("Data Destroyed!".red.inverse);
+    process.exit();
+  } catch (error) {
+    console.error(`${error}`.red.inverse);
+    process.exit(1);
+  }
+};
+
+if (process.argv[2] === "-d") {
+  destroyData();
+} else {
+  importData();
+}
+
+in root/package.json
+under npm run dev
+  "data:import": "node backend/seeder",
+  "data:destroy": "node backend/seeder -d"
+
+in backend/data/products.js
+remove _id for products as mongodb is gonna assign _id in the db
+
+
+15. fetching products from db
+
+in backend/server.js
+
+import productRoutes from "./routes/productRoutes.js";
+import asyncHandler from "./middleware/asyncHandler.js";
+app.use("/api/products", productRoutes); // mounting /api/products router
+
+remove product routes
+
+in backend > middleware > asyncHandler.js
+
+const asyncHandler = (fn) => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
+export default asyncHandler;
+
+in backend > routes > productRoutes.js
+
+import express from "express";
+import Product from "../models/productModel.js";
+import asyncHandler from "../middleware/asyncHandler.js";
+
+const router = express.Router();
+
+router.get(
+  "/",
+  asyncHandler(async (req, res) => {
+    const products = await Product.find({});
+    console.log(products);
+    res.json(products);
+  })
+);
+
+router.get(
+  "/:id",
+  asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    res.json(product);
+  })
+);
+
+export default router;
+
+
+16. error Handler
+
+in backend/middleware > errorMiddleware.js
+
+const notFound = (req, res, next) => {
+  const error = new Error(`Not Found - ${req.originalUrl}`);
+  res.status(404);
+  next(error);
+};
+
+const errorHandler = (err, req, res, next) => {
+  let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  let message = err.message;
+
+  if (err.name === "CastError" && err.kind === "ObjectId") {
+    statusCode = 404;
+    message = "Resource not found";
+  }
+
+  res.status(statusCode).json({
+    message: message,
+    stack: process.env.NODE_ENV === "production" ? null : err.stack,
+  });
+};
+
+export { notFound, errorHandler };
+
+in backend/server.js
+
+import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+app.use(notFound)
+app.use(errorHandler)
+
+
+17. productController
+
+in backend > controllers > productController.js
+
+import asyncHandler from "../middleware/asyncHandler.js";
+import Product from "../models/productModel.js";
+
+const getProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({});
+  res.json(products);
+});
+
+const getProductById = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (product) {
+    return res.json(product);
+  }
+  res.status(404);
+  throw new Error("Resource not found");
+});
+
+export { getProducts, getProductById };
+
+in backend/routes/productRoutes.js
+
+import express from "express";
+const router = express.Router();
+import {
+  getProducts,
+  getProductById,
+} from "../controllers/productController.js";
+
+router.route("/").get(getProducts);
+router.route("/:id").get(getProductById);
+
+export default router;
+
+
+Redux:
+  It is a state management library
+Component:
+  Components are independent and reusable bits of code.
+  They serve the same purpose as JavaScript functions, but work in isolation and return HTML.
+  Components come in two types, Class components and Function components
+State:
+  React components has a built-in state object.
+  The state object is where you store property values that belong to the component.
+  When the state object changes, the component re-renders.
+
+
+18. apiSlice
+
+in frontend
+npm i @redux/toolkit react-redux
+
+react-redux is a bridge that connects reeact and redux
+redux can be used with vanillajs vue angular etc. 
+
+in backend/src > constants.js
+
+export const BASE_URL =
+  process.env.NODE_ENV === "develeopment" ? "http://localhost:5000" : "/";
+export const PRODUCTS_URL = "/api/products";
+export const ORDERS_URL = "/api/orders";
+export const USERS_URL = "/api/users";
+export const PAYPAL_URL = "/api/config/paypal";
+
+in backend/index.js
+
+import store from "./store";
+import { Provider } from "react-redux";
+remove line  <RouterProvider router={router} />
+add
+<Provider store={store}>
+  <RouterProvider router={router} />
+</Provider>
+
+in backend/src > slices > apiSlice.js
+
+import { fetchBaseQuery, createApi } from "@reduxjs/toolkit/query/react";
+import { BASE_URL } from "../constants";
+
+const baseQuery = fetchBaseQuery({ baseUrl: BASE_URL });
+
+export const apiSlice = createApi({
+  baseQuery,
+  tagTypes: ["Product", "Order", "User"],
+  endpoints: (builder) => ({}),
+});
+
+in backend/src > store.js
+
+import { configureStore } from "@reduxjs/toolkit";
+import { apiSlice } from "./slices/apiSlice";
+
+const store = configureStore({
+  reducer: {
+    [apiSlice.reducerPath]: apiSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
+  devTools: true,
+});
+
+export default store;
+
+
+
+19. HomeScreen slice
+
+in frontend/screens/HomeScreen.jsx
+
+import { useGetProductsQuery } from "../slices/productSlice";
+
+remove
+import { useEffect, useSelector } from "react-redux";
+import axios from "axios"
+
+in return
+remove 
+const [products, setProducts] = useState([]);
+useEffect() hook
+
+replace return <>code<>
+code with
+ {isLoading ? (<div><h2>Loading...</h2></div>) : error ? (
+    <div>{error?.data.message || error.error}</div>
+  ) : (
+    <>
+      <h1>Latest Products</h1>
+      <Row>
+        {products.map((product) => (
+          <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+            <Product product={product} />
+          </Col>
+        ))}
+      </Row>
+    </>
+  )
+ }
+
+in backend/src/slices > productSlice.js
+
+import { PRODUCTS_URL } from "../constants";
+import { apiSlice } from "./apiSlice";
+
+export const productSlice = apiSlice.injectEndpoints({
+  endpoints: (builder) => ({
+    getProducts: builder.query({
+      query: () => ({
+        url: PRODUCTS_URL,
+      }),
+      keepUnusedDataFor: 5,
+    }),
+    getProductDetails: builder.query({
+      query: (productId) => ({
+        url: `${PRODUCTS_URL}/${productId}`,
+      }),
+      keepUnusedDataFor: 5,
+    }),
+  }),
+});
+
+export const { useGetProductsQuery, useGetProductDetailsQuery } = productSlice;
+
+in frontend/src/screens/ProductScreens.jsx
+
+import { useGetProductDetailsQuery } from "../slices/productSlice.js";
+
+above return remove everything and write this code
+  const params = useParams();
+  const productId = params.id;
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useGetProductDetailsQuery(productId);
+
+in return 
+  <Link to="/" className="btn btn-light my-3">
+    Go Back
+  </Link>
+  {isLoading ? ( <h2>Loading...</h2> ) : error ? ( <h3>{error?.data?.message || error?.error}</h3> ) : ( <>code...</> )}
+
+
+20. Loader and Message Components
+
+in frontend/src/components > Loader.jsx
+
+import { Spinner } from "react-bootstrap";
+
+const Loader = () => {
+  return (
+    <Spinner
+      animation="border"
+      role="status"
+      style={{
+        width: "100px",
+        height: "100px",
+        margin: "auto",
+        display: "block",
+      }}
+    ></Spinner>
+  );
+};
+
+export default Loader;
+
+in frontend/src/components > Message.jsx
+
+import { Alert } from "react-bootstrap";
+
+const Message = ({ variant, children }) => {
+  return <Alert variant={variant}>{children}</Alert>;
+};
+
+Message.defaultProps = {
+  variant: "info",
+};
+
+export default Message;
+
+in in frontend/src/screens/HomeScreen.jsx
+
+import Loader from "../components/Loader";
+import Message from "../components/Message";
+{isLoading ? (
+  <div>
+    <Loader />
+  </div>
+  ) : error ? (
+    <Message variant="danger">
+      {error?.data?.message || error.error}
+    </Message>
+  ) : (<>Code...</>)
+}
+
+do same in ProductScreen.jsx
+
+
+21. change productSlice to productApiSlice in all files
+slice/productSlice > productApiSlice
+HomeScreen.jsx 
+ProductScreen.jsx
+
+
+22. cartSlice
+
+in frontend/src/slices > cartSlice.js
+
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = localStorage.getItem("cart")
+  ? JSON.parse(localStorage.getItem("cart"))
+  : { cartItems: [] };
+
+const cartSlice = createSlice({
+  name: "cart",
+  initialState,
+  reducers: {},
+});
+
+export default cartSlice.reducer;
+
+in frontend/src/store.js
+
+import cartSliceReducer from "./slices/cartSlice";
+in reducers add
+cart: cartSliceReducer
+
+
+23. addToCart action
+
+in frontend/src/slices/cartSlice.js
+
+const addDecimals = (num) => {
+  return (Math.round(num * 100) / 100).toFixed(2);
+};
+
+in reduers add
+
+addToCart: (state, action) => {
+  // The item to add to the cart
+  const item = action.payload;
+
+  // Check if the item is already in the cart
+  const existItem = state.cartItems.find((x) => x._id === item._id);
+
+  if (existItem) {
+    // If exists, update quantity
+    state.cartItems = state.cartItems.map((x) =>
+      x._id === existItem._id ? item : x
+    );
+  } else {
+    // If not exists, add new item to cartItems
+    state.cartItems = [...state.cartItems, item];
+  }
+
+  // Calculate the items price
+  state.itemsPrice = addDecimals(
+    state.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+  );
+
+  // Calculate the shipping price | If items price is greater than 100, shipping is free | If not, shipping is 10
+  state.shippingPrice = addDecimals(state.itemsPrice > 100 ? 0 : 10);
+
+  // Calculate the tax price | Tax is 15% of the items price
+  state.taxPrice = addDecimals(
+    Number((0.15 * state.itemsPrice).toFixed(2))
+  );
+
+  // Calculate the total price | Total price is the sum of the items price, shipping price and tax price
+  state.totalPrice = (
+    Number(state.itemsPrice) +
+    Number(state.shippingPrice) +
+    Number(state.taxPrice)
+  ).toFixed(2);
+
+  // Save the cart to localStorage
+  localStorage.setItem('cart', JSON.stringify(state));
+}
+
+export const { addToCart } = cartSlice.actions;
+
+in frontend/src/screens/ProductScreen.jsx
+
+import { Form, Row,Col, Image, ListGroup, Card, Button } from "react-bootstrap";
+import { useParams, useNavigate } from "react-router-dom";
+import { addToCart } from "../slices/cartSlice";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+
+in const ProductScreen()
+
+ const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [qty, setQty] = useState(1);
+
+  const addToCartHandler = () => {
+    dispatch(addToCart({ ...product, qty }));
+    navigate("/cart");
+  };
+
+above Add To Cart button
+
+  {/* Qty Select */}
+  {product.countInStock > 0 && (
+    <ListGroup.Item>
+      <Row>
+        <Col>Qty</Col>
+        <Col>
+          <Form.Control
+            as="select"
+            value={qty}
+            onChange={(e) => setQty(e.target.value)}
+          >
+            {[...Array(product.countInStock).keys()].map(
+              (x) => (
+                <option key={x + 1} value={x + 1}>
+                  {x + 1}
+                </option>
+              )
+            )}
+          </Form.Control>
+        </Col>
+      </Row>
+    </ListGroup.Item>
+  )}
+
+in button add property
+  onClick={addToCartHandler}
+
+
+24. cartSlice.jsx clean up
+
+in frontend/src > utils > cartUtils.js
+
+cut this code from frontend/src/slices/cartSlice.jsx and paste here
+
+const addDecimals = (num) => {
+  return (Math.round(num * 100) / 100).toFixed(2);
+};
+
+export const updateCart = (state) => {
+  state.itemsPrice = addDecimals(
+    state.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+  );
+
+  // Calculate the shipping price | If items price is greater than 100, shipping is free | If not, shipping is 10
+  state.shippingPrice = addDecimals(state.itemsPrice > 100 ? 0 : 10);
+
+  // Calculate the tax price | Tax is 15% of the items price
+  state.taxPrice = addDecimals(Number((0.15 * state.itemsPrice).toFixed(2)));
+
+  // Calculate the total price | Total price is the sum of the items price, shipping price and tax price
+  state.totalPrice = (
+    Number(state.itemsPrice) +
+    Number(state.shippingPrice) +
+    Number(state.taxPrice)
+  ).toFixed(2);
+
+  // Save the cart to localStorage
+  localStorage.setItem("cart", JSON.stringify(state));
+};
+
+in const addDecimals = (num) => {
+  return (Math.round(num * 100) / 100).toFixed(2);
+};
+
+in frontend/src/slices/cartSlice.jsx 
+import { updateCart } from "../utils/cartUtils";
+under
+if(existItem) 
+else
+return updateCart(state);
+
+
+25. cartItems count in Header
+
+in frontend/src/components/Header.jsx
+
+import { Navbar, Nav, Container, Badge } from "react-bootstrap";
+import { useSelector } from "react-redux";
+beside Cart icon
+  {cartItems.length > 0 && (
+    <Badge pill bg="success" style={{ marginLeft: "5px" }}>
+      {cartItems.reduce((a, c) => a + Number(c.qty), 0)}
+    </Badge>
+  )}
+
+
+26. CartScreen
+
+in frontend/src/screens > CartScreen.jsx
+
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Row,
+  Col,
+  ListGroup,
+  Image,
+  Form,
+  Button,
+  Card,
+} from "react-bootstrap";
+import { FaTrash } from "react-icons/fa";
+import { addToCart, removeFromCart } from "../slices/cartSlice";
+
+const CartScreen = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const cart = useSelector((state) => state.cart);
+  const { cartItems } = cart;
+
+  const addToCartHandler = async (product, qty) => {
+    dispatch(addToCart({ ...product, qty }));
+    navigate("/cart");
+  };
+
+  const removeFromCartHandler = (id) => {
+    dispatch(removeFromCart(id));
+  };
+
+  return (
+    <Row>
+      <Col md={8}>
+        <Link to="/" className="btn btn-light my-3">
+          Go back
+        </Link>
+        <ListGroup variant="flush">
+          {cartItems.map((item) => (
+            <ListGroup.Item key={item._id}>
+              <Row>
+                <Col md={2}>
+                  <Image src={item.image} alt={item.name} fluid rounded />
+                </Col>
+                <Col md={3}>
+                  <Link to={`/product/${item._id}`}>{item.name}</Link>
+                </Col>
+                <Col md={2}>${item.price}</Col>
+                <Col md={2}>
+                  <Form.Control
+                    as="select"
+                    value={item.qty}
+                    onChange={(e) =>
+                      addToCartHandler(item, Number(e.target.value))
+                    }
+                  >
+                    {[...Array(item.countInStock).keys()].map((x) => (
+                      <option key={x + 1} value={x + 1}>
+                        {x + 1}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </Col>
+                <Col md={2}>
+                  <Button
+                    type="button"
+                    variant="light"
+                    onClick={() => removeFromCartHandler(item._id)}
+                  >
+                    <FaTrash />
+                  </Button>
+                </Col>
+              </Row>
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+      </Col>
+      <Col md={4}>
+        <Card>
+          <ListGroup variant="flush">
+            <ListGroup.Item>
+              <h2>
+                Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)})
+                items
+              </h2>
+              $
+              {cartItems
+                .reduce((acc, item) => acc + item.qty * item.price, 0)
+                .toFixed(2)}
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Button
+                type="button"
+                className="btn-block"
+                disabled={cartItems.length === 0}
+              >
+                Proceed To Checkout
+              </Button>
+            </ListGroup.Item>
+          </ListGroup>
+        </Card>
+      </Col>
+    </Row>
+  );
+};
+
+export default CartScreen;
+
+in frontend/src/index.js
+
+import CartScreen from "./screens/CartScreen";
+in router
+<Route>
+  <Route path="/cart" element={<CartScreen />} />
+</Route>
+
+in frontend/src/slices/cartSlice
+
+under updateCart()
+  removeFromCart: (state, action) => {
+    // Filter out the item to remove from the cart
+    state.cartItems = state.cartItems.filter((x) => x._id !== action.payload);
+
+    // Update the prices and save to storage
+    return updateCart(state);
+  },
+
+export const { addToCart, removeFromCart } = cartSlice.actions;
+
+
+27. userRoutes and controller
+
+in backend/controllers > userController.js
+
+import asyncHandler from "../middleware/asyncHandler.js";
+
+// @desc    Register a new user
+// @route   POST /api/users
+// @access  Public
+const registerUser = asyncHandler(async (req, res) => {
+  res.send("register user");
+});
+
+// @desc    Get all users
+// @route   GET /api/users
+// @access  Private/Admin
+const getUsers = asyncHandler(async (req, res) => {
+  res.send("get users");
+});
+
+// @desc    Auth user & get token
+// @route   POST /api/users/login
+// @access  Public
+const authUser = asyncHandler(async (req, res) => {
+  res.send("auth user");
+});
+
+// @desc    Get user profile
+// @route   GET /api/users/profile
+// @access  Private
+const getUserProfile = asyncHandler(async (req, res) => {
+  res.send("get user profile");
+});
+
+// @desc    Update user profile
+// @route   PUT /api/users/profile
+// @access  Private
+const updateUserProfile = asyncHandler(async (req, res) => {
+  res.send("update user profile");
+});
+
+// @desc    Delete user
+// @route   DELETE /api/users/:id
+// @access  Private/Admin
+const deleteUser = asyncHandler(async (req, res) => {
+  res.send("delete user");
+});
+
+// @desc    Get user by ID
+// @route   GET /api/users/:id
+// @access  Private/Admin
+const getUserById = asyncHandler(async (req, res) => {
+  res.send("get user by id");
+});
+
+// @desc    Update user
+// @route   PUT /api/users/:id
+// @access  Private/Admin
+const updateUser = asyncHandler(async (req, res) => {
+  res.send("update user");
+});
+
+// @desc    Logout user
+// @route   POST /api/users/logout
+// @access  Public
+const logoutUser = asyncHandler(async (req, res) => {
+  res.send("logout user");
+});
+
+export {
+  authUser,
+  registerUser,
+  getUserProfile,
+  updateUserProfile,
+  getUsers,
+  deleteUser,
+  getUserById,
+  updateUser,
+  logoutUser
+};
+
+in backend/routes > userRoutes.js
+
+import express from "express";
+import {
+  authUser,
+  registerUser,
+  getUserProfile,
+  updateUserProfile,
+  getUsers,
+  deleteUser,
+  getUserById,
+  updateUser,
+  logoutUser
+} from "../controllers/userController.js";
+
+const router = express.Router();
+
+router.route("/").post(registerUser).get(getUsers);
+router.post("/login", authUser);
+router.post("logout", logoutUser);
+router.post("logout", logout);
+router.route("/profile").get(getUserProfile).put(updateUserProfile);
+router.route("/:id").delete(deleteUser).get(getUserById).put(updateUser);
+
+export default router;
+
+in backend/server.js
+
+import userRoutes from "./routes/userRoutes.js";
+app.use("/api/users", userRoutes);
+
+
+28. user Auth and login
+
+in backend/controller/userController.js
+
+import User from "../models/userModel.js";
+const authUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (user && (await user.matchPassword(password))) {
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  } else {
+    res.status(401);
+    throw new Error("Invalid email or password");
+  }
+});
+
+in backend/models/userModel.js
+
+import bcrypt from "bcryptjs";
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+in backend/server.js
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+JWT TOKENS
+
+A JSON web token(JWT) is JSON Object which is used to securely transfer information over the web(between two parties).
+It can be used for an authentication system and can also be used for information exchange.
+The token is mainly composed of header, payload, signature. These three parts are separated by dots(.).
+JWT defines the structure of information we are sending from one party to the another, and it comes in two forms – Serialized, Deserialized.
+The Serialized approach is mainly used to transfer the data through the network with each request and response.
+While the deserialized approach is used to read and write data to the web token.
+
+Header:
+A header in a JWT is mostly used to describe the cryptographic operations applied to the JWT like signing/decryption technique used on it.
+{
+  "typ":"JWT", // type
+  "alg":"HS256" // algorithm used
+}
+
+Payload:
+The payload is the part of the JWT where all the user data is actually added.
+{
+  "userId":"b07f85be-45da",
+  "iss": "https://provider.domain.com/",
+  "sub": "auth/some-hash-here",
+  "exp": 153452683
+}
+
+Signature:
+This is the third part of JWT and used to verify the authenticity of token.
+If any tampering is done it can be identified from Signature
+ 
+HASHINGALGO( base64UrlEncode(header) + “.” + base64UrlEncode(payload),secret)
+
+
+Serialized
+JWT in the serialized form represents a string of the following format:
+[header].[payload].[signature]
+
+Deserialized
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.           // Header
+eyJpZCI6MTIzNDU2Nzg5LCJuYW1lIjoiSm9zZXBoIn0.    // Payload
+OpOSSw7e485LOP5PrzScxHb7SR6sAOMRckfFwi4rp7o     // Signature
+
+
+29. JWT http-only cookie
+
+in root 
+npm i jsonwebtoken
+in root/.env
+JWT_SECRET=This_is_a_secret_key
+
+in backend/controllers/userController.js
+
+import jst from "jsonwebtoken"
+
+in if(user && matchPassword(password))
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    // Set JWT as an HTTP-Only cookie
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "development", // Use secure cookies in production means uses https
+      sameSite: "strict", // Prevent CSRF attacks
+      maxAge: 60 * 60 * 1000, // 1 hour in milliseconds
+    });
+
+
+30. protected routes
+
+in root 
+npm i cookie-parser
+
+in backend/server.js
+import coookieParser from "cookie-parser"
+app.use(cookieParser())
+
+in backend/middleware > authMiddleware.js
+
+import jwt from "jsonwebtoken";
+import asyncHandler from "./asyncHandler.js";
+import User from "../models/userModel.js";
+
+// User must be authenticated
+const protect = asyncHandler(async (req, res, next) => {
+  let token;
+
+  // Read JWT from the 'jwt' cookie
+  token = req.cookies.jwt;
+
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      // fetch user data without password
+      req.user = await User.findById(decoded.userId).select("-password");
+
+      next();
+    } catch (error) {
+      console.error(error);
+      res.status(401);
+      throw new Error("Not authorized, token failed");
+    }
+  } else {
+    res.status(401);
+    throw new Error("Not authorized, no token");
+  }
+});
+
+// User must be an admin
+const admin = (req, res, next) => {
+  if (req.user && req.user.isAdmin) {
+    next();
+  } else {
+    res.status(401);
+    throw new Error("Not authorized as an admin");
+  }
+};
+
+export { protect, admin };
+
+in backend/routes/userRoutes.js
+
+convert router.route("/").post(registerUser).get(getUsers); to 
+router.route("/").post(registerUser).get(protect, admin, getUsers);
+
+router
+  .route("/profile")
+  .get(getUserProfile)
+  .put(updateUserProfile);
+to 
+router
+  .route("/profile")
+  .get(protect, getUserProfile)
+  .put(protect, updateUserProfile);
+
+router
+  .route("/:id")
+  .delete(deleteUser)
+  .get(getUserById)
+  .put(updateUser);
+to 
+router
+  .route("/:id")
+  .delete(protect, admin, deleteUser)
+  .get(protect, admin, getUserById)
+  .put(protect, admin, updateUser);
+
+
+31. logout user and clear JWT cookie
+
+in backend/controller/userController.js
+
+const logoutUser = asyncHandler(async (req, res) => {
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+});
+
+
+32. Register user and generateToken util
+
+in backend > utils > generateToken.js
+
+import jwt from "jsonwebtoken";
+
+const generateToken = (res, userId) => {
+  const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
+    expiresIn: "1h",
+  });
+
+  // Set JWT as an HTTP-Only cookie
+  res.cookie("jwt", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV !== "development", // Use secure cookies in production
+    sameSite: "strict", // Prevent CSRF attacks
+    maxAge: 60 * 60 * 1000, // 1 hour in milliseconds
+  });
+};
+
+export default generateToken;
+
+in backend/controller/userController.js
+
+import generateToken from "../utils/generateToken.js"
+
+const registerUser = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
+
+  const userExists = await User.findOne({ email });
+
+  if (userExists) {
+    res.status(400);
+    throw new Error("User already exists");
+  }
+
+  const user = await User.create({
+    name,
+    email,
+    password,
+  });
+
+  if (user) {
+    generateToken(res, user._id);
+
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invalid user data");
+  }
+});
+
+in backend/controller/userController.js
+
+replace 
+
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    // Set JWT as an HTTP-Only cookie
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development', // Use secure cookies in production
+      sameSite: 'strict', // Prevent CSRF attacks
+      maxAge: 60 * 60 * 1000, // 1 hour in milliseconds
+    });
+
+with
+
+generateToken(res, user._id)
+
+
+32. User profile endpoints
+
+in backend/controller/userController.js
+
+const getUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
+
+33. userSlice and endpoints
+
+in frontend/src/slices > authSlice.js
+
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  userInfo: localStorage.getItem("userInfo")
+    ? JSON.parse(localStorage.getItem("userInfo"))
+    : null,
+};
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    setCredentials: (state, action) => {
+      state.userInfo = action.payload;
+      localStorage.setItem("userInfo", JSON.stringify(action.payload));
+    },
+    logout: (state, action) => {
+      state.userInfo = null;
+      localStorage.removeItem("userInfo");
+    },
+  },
+});
+
+export const { setCredentials, logout } = authSlice.actions;
+
+export default authSlice.reducer;
+
+in frontend/src/slices > userApiSlice.js
+// this slice is used for user login and storing user credentials in localStorage
+
+import { apiSlice } from "./apiSlice";
+import { USERS_URL } from "../constants";
+
+export const userApiSlice = apiSlice.injectEndpoints({
+  endpoints: (builder) => ({
+    login: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/login`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+  }),
+});
+
+export const { useLoginMutation } = userApiSlice;
+
+in frontend/src/store.js
+
+import authReducer from "./slices/authSlice";
+in reducers
+  auth: authReducer,
+
+34. LoginScreen functionality
+
+in frontend/src/components > FormContainer.jsx
+
+import { Container, Row, Col } from "react-bootstrap";
+
+const FormContainer = ({ children }) => {
+  return (
+    <Container>
+      <Row className="justify-content-md-center">
+        <Col xs={12} md={6}>
+          {children}
+        </Col>
+      </Row>
+    </Container>
+  );
+};
+
+export default FormContainer;
+
+in frontend/src/screens > LoginScreen.jsx
+
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Form, Button, Row, Col } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../components/Loader";
+import FormContainer from "../components/FormContainer";
+
+import { useLoginMutation } from "../slices/userApiSlice";
+import { setCredentials } from "../slices/authSlice";
+import { toast } from "react-toastify";
+
+const LoginScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [login, { isLoading }] = useLoginMutation();
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const { search } = useLocation();
+  const sp = new URLSearchParams(search);
+  const redirect = sp.get("redirect") || "/";
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [navigate, redirect, userInfo]);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await login({ email, password }).unwrap();
+      dispatch(setCredentials({ ...res }));
+      navigate(redirect);
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
+  };
+
+  return (
+    <FormContainer>
+      <h1>Sign In</h1>
+
+      <Form onSubmit={submitHandler}>
+        <Form.Group className="my-2" controlId="email">
+          <Form.Label>Email Address</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Enter email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group className="my-2" controlId="password">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
+        <Button disabled={isLoading} type="submit" variant="primary">
+          Sign In
+        </Button>
+
+        {isLoading && <Loader />}
+      </Form>
+
+      <Row className="py-3">
+        <Col>
+          New Customer?{" "}
+          <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
+            Register
+          </Link>
+        </Col>
+      </Row>
+    </FormContainer>
+  );
+};
+
+export default LoginScreen;
+
+in frontend
+npm i react-toastify
+
+in frontend/src/App.js
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+in return 
+<ToastContainer />
+
+in frontend/src/index.js
+import LoginScreen from "./screens/LoginScreen";
+in routes add
+<Route path="/login" element={<LoginScreen />} />
+
+in frontend/src/slices/authSlice.js
+
+remove logout from reducers and from exports
+
+in frontend/src/components/Header.jsx
+replace it with 
+
+import { Navbar, Nav, Container, NavDropdown, Badge } from 'react-bootstrap';
+import { FaShoppingCart, FaUser } from 'react-icons/fa';
+import { LinkContainer } from 'react-router-bootstrap';
+import { useSelector } from 'react-redux';
+
+const Header = () => {
+  const { cartItems } = useSelector((state) => state.cart);
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const logoutHandler = () => {
+    console.log('logout');
+  };
+
+  return (
+    <header>
+      <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
+        <Container>
+          <LinkContainer to='/'>
+            <Navbar.Brand>ProShop</Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle aria-controls='basic-navbar-nav' />
+          <Navbar.Collapse id='basic-navbar-nav'>
+            <Nav className='ms-auto'>
+              <LinkContainer to='/cart'>
+                <Nav.Link>
+                  <FaShoppingCart /> Cart
+                  {cartItems.length > 0 && (
+                    <Badge pill bg='success' style={{ marginLeft: '5px' }}>
+                      {cartItems.reduce((a, c) => a + c.qty, 0)}
+                    </Badge>
+                  )}
+                </Nav.Link>
+              </LinkContainer>
+              {userInfo ? (
+                <>
+                  <NavDropdown title={userInfo.name} id='username'>
+                    <LinkContainer to='/profile'>
+                      <NavDropdown.Item>Profile</NavDropdown.Item>
+                    </LinkContainer>
+                    <NavDropdown.Item onClick={logoutHandler}>
+                      Logout
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                </>
+              ) : (
+                <LinkContainer to='/login'>
+                  <Nav.Link>
+                    <FaUser /> Sign In
+                  </Nav.Link>
+                </LinkContainer>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </header>
+  );
+};
+
+export default Header;
+
+
+34. logout functionality
+
+in frontend/src/components/Header.jsx
+
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useLogoutMutation } from "../slices/userApiSlice";
+import { logout } from "../slices/authSlice";
+
+in const Header()
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [logoutApiCall] = useLogoutMutation();
+  const logoutHandler = async () => {
+    try {
+      await logoutApiCall().unwrap();
+      dispatch(logout());
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+in frontend/src/slices/authSlice.js
+
+in reducers
+  logout: (state) => {
+    state.userInfo = null;
+    localStorage.removeItem("userInfo");
+  },
+
+export logout
+
+in frontend/src/slices/userApiSLice.js
+under login
+  logout: builder.mutation({
+    query: () => ({
+      url: `${USERS_URL}/logout`,
+      method: "POST",
+    }),
+  }),
+
+export const { useLoginMutation, useLogoutMutation } = userApiSlice;
+
+
+35. RegisterScreen and functionality
+
+in frontend/src/screens > RegisterScreen.jsx
+
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Form, Button, Row, Col } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../components/Loader";
+import FormContainer from "../components/FormContainer";
+
+import { useRegisterMutation } from "../slices/userApiSlice";
+import { setCredentials } from "../slices/authSlice";
+import { toast } from "react-toastify";
+
+const RegisterScreen = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [register, { isLoading }] = useRegisterMutation();
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const { search } = useLocation();
+  const sp = new URLSearchParams(search);
+  const redirect = sp.get("redirect") || "/";
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [navigate, redirect, userInfo]);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+    } else {
+      try {
+        const res = await register({ name, email, password }).unwrap();
+        dispatch(setCredentials({ ...res }));
+        navigate(redirect);
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
+
+  return (
+    <FormContainer>
+      <h1>Register</h1>
+      <Form onSubmit={submitHandler}>
+        <Form.Group className="my-2" controlId="name">
+          <Form.Label>
+            <strong>Name</strong>
+            <br />
+          </Form.Label>
+          <Form.Control
+            type="name"
+            placeholder="Enter name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group className="my-2" controlId="email">
+          <Form.Label>
+            <strong>Email Address</strong>
+            <br />
+          </Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Enter email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group className="my-2" controlId="password">
+          <Form.Label>
+            <strong>Password</strong>
+            <br />
+          </Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+        <Form.Group className="my-2" controlId="confirmPassword">
+          <Form.Label>
+            <strong>Confirm Password</strong>
+            <br />
+          </Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Confirm password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
+        <Button
+          disabled={isLoading}
+          type="submit"
+          variant="primary"
+          style={{ backgroundColor: "black", color: "white" }}
+        >
+          Register
+        </Button>
+
+        {isLoading && <Loader />}
+      </Form>
+
+      <Row className="py-3">
+        <Col>
+          Already have an account?{" "}
+          <Link
+            to={redirect ? `/login?redirect=${redirect}` : "/login"}
+            style={{ color: "blue" }}
+          >
+            Login
+          </Link>
+        </Col>
+      </Row>
+    </FormContainer>
+  );
+};
+
+export default RegisterScreen;
+
+in frontend/src/slices/userApiSlice.js
+
+in endpoints()
+register: builder.mutation({
+  query: (data) => ({
+    url: `${USERS_URL}`,
+    method: "POST",
+    body: data,
+  }),
+}),
+export const { useRegisterMutation, useLoginMutation, useLogoutMutation } = userApiSlice;
+
+in frontend/src/index.js
+
+import RegisterScreen from "./screens/RegisterScreen";
+in routes
+  <Route path="/register" element={<RegisterScreen />} />
+  
+
+36. ShippingAddress and State
+
+in frontend/src/slices/cartSLices.js
+
+add  shippingAddress: {}, paymentMethod: "PayPal" 
+to initialState of in {cartItems: [], ...}
+
+in reducers
+saveShippingAddress: (state, action) => {
+  state.shippingAddress = action.payload; // set payload to the state
+  localStorage.setItem("cart", JSON.stringify(state));
+},
+
+export saveShippingAddress
+
+in frontend/src/screens > ShippingAddress 
+
+import { useState } from "react";
+import { Form, Button } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import FormContainer from "../components/FormContainer";
+import { saveShippingAddress } from "../slices/cartSlice";
+
+const ShippingScreen = () => {
+  const cart = useSelector((state) => state.cart);
+  const { shippingAddress } = cart;
+
+  const [address, setAddress] = useState(shippingAddress?.address || "");
+  const [city, setCity] = useState(shippingAddress?.city || "");
+  const [postalCode, setPostalCode] = useState(
+    shippingAddress?.postalCode || ""
+  );
+  const [country, setCountry] = useState(shippingAddress?.country || "");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(saveShippingAddress({ address, city, postalCode, country }));
+    navigate("/payment");
+  };
+
+  return (
+    <FormContainer>
+      <h1>Shipping</h1>
+      <br />{" "}
+      <Form onSubmit={submitHandler}>
+        <Form.Group className="my-2" controlId="address">
+          <Form.Label>
+            <strong>Address</strong>
+          </Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter address"
+            value={address}
+            required
+            onChange={(e) => setAddress(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group className="my-2" controlId="city">
+          <Form.Label>
+            <strong>City</strong>
+          </Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter city"
+            value={city}
+            required
+            onChange={(e) => setCity(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group className="my-2" controlId="postalCode">
+          <Form.Label>
+            <strong>Postal Code</strong>
+          </Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter postal code"
+            value={postalCode}
+            required
+            onChange={(e) => setPostalCode(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group className="my-2" controlId="country">
+          <Form.Label>
+            <strong>Country</strong>
+          </Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter country"
+            value={country}
+            required
+            onChange={(e) => setCountry(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
+        <Button type="submit" variant="primary">
+          Continue
+        </Button>
+      </Form>
+    </FormContainer>
+  );
+};
+
+export default ShippingScreen;
+
+in frontend/src/index.js
+
+import ShippingScreen from "./screens/ShippingScreen";
+in Routes
+<Route path="/shipping" element={<ShippingScreen />} />
+
+
+37. Private Routes
+
+in frontend/src/components > PrivateRoute.js
+
+import { Navigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+const PrivateRoute = () => {
+  const { userInfo } = useSelector((state) => state.auth);
+  return userInfo ? <Outlet /> : <Navigate to="/login" replace />;
+};
+export default PrivateRoute;
+
+in frontend/src/index.js
+
+import PrivateRoute from "./components/PrivateRoute";
+in Routes
+  // here we add private routes
+  <Route path="" element={<PrivateRoute />}>
+    <Route path="/shipping" element={<ShippingScreen />} />
+  </Route>
+
+
+38. CheckoutSteps
+
+in frontend/src/components > CheckeckoutSteps.jsx
+
+import React from "react";
+import { Nav } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+
+const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
+  return (
+    <Nav className="justify-content-center mb-4">
+      <Nav.Item>
+        {step1 ? (
+          <LinkContainer to="/login">
+            <Nav.Link>Sign In</Nav.Link>
+          </LinkContainer>
+        ) : (
+          <Nav.Link disabled>Sign in</Nav.Link>
+        )}
+      </Nav.Item>
+
+      <Nav.Item>
+        {step2 ? (
+          <LinkContainer to="/shipping">
+            <Nav.Link>Shipping</Nav.Link>
+          </LinkContainer>
+        ) : (
+          <Nav.Link disabled color="black">
+            Shipping
+          </Nav.Link>
+        )}
+      </Nav.Item>
+
+      <Nav.Item>
+        {step3 ? (
+          <LinkContainer to="/payment">
+            <Nav.Link>Payment</Nav.Link>
+          </LinkContainer>
+        ) : (
+          <Nav.Link disabled>Payment</Nav.Link>
+        )}
+      </Nav.Item>
+
+      <Nav.Item>
+        {step4 ? (
+          <LinkContainer to="/placeorder">
+            <Nav.Link>Place Order</Nav.Link>
+          </LinkContainer>
+        ) : (
+          <Nav.Link disabled>Place Order</Nav.Link>
+        )}
+      </Nav.Item>
+    </Nav>
+  );
+};
+
+export default CheckoutSteps;
+
+in frontend/src/screens/ShippingScreen.jsx
+
+import CheckoutSteps from "../components/CheckoutSteps";
+in return unnder FormContainer
+  <CheckoutSteps step1 step2 />
+
+
+39. PaymentScreen
+
+in frontend/src/screens > PaymentScreen.jsx
+
+import { useState, useEffect } from "react";
+import { Form, Button, Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import FormContainer from "../components/FormContainer";
+import CheckoutSteps from "../components/CheckoutSteps";
+import { savePaymentMethod } from "../slices/cartSlice";
+
+const PaymentScreen = () => {
+  const navigate = useNavigate();
+  const cart = useSelector((state) => state.cart);
+  const { shippingAddress } = cart;
+
+  useEffect(() => {
+    // if no shipping address, redirect to shipping to fill address
+    if (!shippingAddress.address) {
+      navigate("/shipping");
+    }
+  }, [navigate, shippingAddress]);
+
+  const [paymentMethod, setPaymentMethod] = useState("PayPal");
+
+  const dispatch = useDispatch();
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(savePaymentMethod(paymentMethod));
+    navigate("/placeorder");
+  };
+
+  return (
+    <FormContainer>
+      <CheckoutSteps step1 step2 step3 />
+      <h1>Payment Method</h1>
+      <Form onSubmit={submitHandler}>
+        <Form.Group>
+          <Form.Label as="legend">Select Method</Form.Label>
+          <Col>
+            <Form.Check
+              className="my-2"
+              type="radio"
+              label="PayPal or Credit Card"
+              id="PayPal"
+              name="paymentMethod"
+              value="PayPal"
+              checked
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            ></Form.Check>
+          </Col>
+        </Form.Group>
+
+        <Button
+          type="submit"
+          variant="primary"
+          style={{ backgroundColor: "black", color: "white" }}
+        >
+          Continue
+        </Button>
+      </Form>
+    </FormContainer>
+  );
+};
+
+export default PaymentScreen;
+
+in frontend/src/slices/cartSlice.js
+
+in reducers
+savePaymentMethod: (state, action) => {
+  state.paymentMethod = action.payload;
+  localStorage.setItem("cart", JSON.stringify(state));
+},
+
+export { savePaymentMethod }
+
+in frontend/src/index.js
+
+import PaymentScreen from "./screens/PaymentScreen";
+in <Routes> <PrivateRoutes> <Route path="/payment" element={<PaymentScreen />} /> </ PrivateRoutes> <Routes>
+
+
+40. order Controller and Routes
+
+in backend/controllers > orderController.js
+
+import asyncHandler from "../middleware/asyncHandler.js";
+import Order from "../models/orderModel.js";
+
+const addOrderItems = asyncHandler(async (req, res) => {
+  res.send("create order");
+});
+
+const getOrderById = asyncHandler(async (req, res) => {
+  res.send("get order by id");
+});
+
+const updateOrderToPaid = asyncHandler(async (req, res) => {
+  res.send("update order to paid");
+});
+
+const updateOrderToDelivered = asyncHandler(async (req, res) => {
+  res.send("update order to delivered");
+});
+
+const getMyOrders = asyncHandler(async (req, res) => {
+  res.send("get logged in user orders");
+});
+
+const getOrders = asyncHandler(async (req, res) => {
+  res.send("get all orders");
+});
+
+export {
+  addOrderItems,
+  getOrderById,
+  updateOrderToPaid,
+  updateOrderToDelivered,
+  getMyOrders,
+  getOrders,
+};
+
+in backend/routes > orderRoutes.js
+
+import express from "express";
+const router = express.Router();
+import {
+  addOrderItems,
+  getOrderById,
+  updateOrderToPaid,
+  updateOrderToDelivered,
+  getMyOrders,
+  getOrders,
+} from "../controllers/orderController.js";
+import { protect, admin } from "../middleware/authMiddleware.js";
+
+router.route("/").post(protect, addOrderItems).get(protect, admin, getOrders);
+router.route("/myorders").get(protect, getMyOrders);
+router.route("/:id").get(protect, getOrderById);
+router.route("/:id/pay").put(protect, updateOrderToPaid);
+router.route("/:id/delivered").put(protect, admin, updateOrderToDelivered);
+
+export default router;
+
+in backend/server.js
+
+import orderRoutes from "./routes/orderRoutes.js";
+app.use("/api/orders", orderRoutes);
+
+41. place order slice
+
+in frontend/src/slices > orderApiSlice.js
+
+import { apiSlice } from "./apiSlice";
+import { ORDERS_URL } from "../constants";
+
+export const orderApiSlice = apiSlice.injectEndpoints({
+  endpoints: (builder) => ({
+    createOrder: builder.mutation({
+      query: (order) => ({
+        url: ORDERS_URL,
+        method: "POST",
+        body: order,
+      }),
+    }),
+  }),
+});
+
+export const { useCreateOrderMutation } = orderApiSlice;
+
+in frontend/src/slices/cartslice.js
+
+in reducers
+
+clearCartItems: (state) => {
+    state.cartItems = [];
+    return updateCart(state);
+  },
+
+export { clearCartItems }
+
+
+42. PlaceOrderScreen
+
+in frontend/src/screens > PlaceorderScreen.jsx
+
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import Message from "../components/Message";
+import CheckoutSteps from "../components/CheckoutSteps";
+import Loader from "../components/Loader";
+import { useCreateOrderMutation } from "../slices/orderApiSlice";
+import { clearCartItems } from "../slices/cartSlice";
+
+const PlaceOrderScreen = () => {
+  const navigate = useNavigate();
+
+  const cart = useSelector((state) => state.cart);
+
+  const [createOrder, { isLoading, error }] = useCreateOrderMutation();
+
+  useEffect(() => {
+    if (!cart.shippingAddress.address) {
+      navigate("/shipping");
+    } else if (!cart.paymentMethod) {
+      navigate("/payment");
+    }
+  }, [cart.paymentMethod, cart.shippingAddress.address, navigate]);
+
+  const dispatch = useDispatch();
+  const placeOrderHandler = async () => {
+    try {
+      const res = await createOrder({
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice: cart.itemsPrice,
+        shippingPrice: cart.shippingPrice,
+        taxPrice: cart.taxPrice,
+        totalPrice: cart.totalPrice,
+      }).unwrap();
+      dispatch(clearCartItems());
+      navigate(`/order/${res._id}`);
+    } catch (err) {
+      toast.error(err);
+    }
+  };
+
+  return (
+    <>
+      <CheckoutSteps step1 step2 step3 step4 />
+      <Row>
+        <Col md={8}>
+          <ListGroup variant="flush">
+            <ListGroup.Item>
+              <h2>Shipping</h2>
+              <p>
+                <strong>Address:</strong>
+                {cart.shippingAddress.address}, {cart.shippingAddress.city}{" "}
+                {cart.shippingAddress.postalCode},{" "}
+                {cart.shippingAddress.country}
+              </p>
+            </ListGroup.Item>
+
+            <ListGroup.Item>
+              <h2>Payment Method</h2>
+              <strong>Method: </strong>
+              {cart.paymentMethod}
+            </ListGroup.Item>
+
+            <ListGroup.Item>
+              <h2>Order Items</h2>
+              {cart.cartItems.length === 0 ? (
+                <Message>Your cart is empty</Message>
+              ) : (
+                <ListGroup variant="flush">
+                  {cart.cartItems.map((item, index) => (
+                    <ListGroup.Item key={index}>
+                      <Row>
+                        <Col md={1}>
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fluid
+                            rounded
+                          />
+                        </Col>
+                        <Col>
+                          <Link to={`/product/${item.product}`}>
+                            {item.name}
+                          </Link>
+                        </Col>
+                        <Col md={4}>
+                          {item.qty} x ${item.price} = ${item.qty * item.price}
+                        </Col>
+                      </Row>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              )}
+            </ListGroup.Item>
+          </ListGroup>
+        </Col>
+        <Col md={4}>
+          <Card>
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                <h2>Order Summary</h2>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
+                  <Col>Items</Col>
+                  <Col>${cart.itemsPrice}</Col>
+                </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
+                  <Col>Shipping</Col>
+                  <Col>${cart.shippingPrice}</Col>
+                </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
+                  <Col>Tax</Col>
+                  <Col>${cart.taxPrice}</Col>
+                </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
+                  <Col>Total</Col>
+                  <Col>${cart.totalPrice}</Col>
+                </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                {error && <Message variant="danger">{error}</Message>}
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Button
+                  type="button"
+                  className="btn-block"
+                  disabled={cart.cartItems === 0}
+                  onClick={placeOrderHandler}
+                >
+                  Place Order
+                </Button>
+                {isLoading && <Loader />}
+              </ListGroup.Item>
+            </ListGroup>
+          </Card>
+        </Col>
+      </Row>
+    </>
+  );
+};
+
+export default PlaceOrderScreen;
+
+
+41. PlaceOrderScreen
+
+in frontend/src/slices/orderApiSlice.js
+in endpoints
+  getOrderDetails builder.query({
+    query: (id) => ({
+      url: `${ORDERS_URL}/${id}`,
+    }),
+    keepUnusedDataFor: 5,
+  }),
+
+export useGetOrderDetailsQuery
+
+in frontend/src/screens > OrderScreen.jsx
+
+import { Link, useParams } from "react-router-dom";
+import { Row, Col, ListGroup, Image, Card } from "react-bootstrap";
+import Message from "../components/Message";
+import Loader from "../components/Loader";
+import { useGetOrderDetailsQuery } from "../slices/orderApiSlice";
+
+const OrderScreen = () => {
+  const { id: orderId } = useParams();
+
+  const { data: order, isLoading, error } = useGetOrderDetailsQuery(orderId);
+
+  return isLoading ? (
+    <Loader />
+  ) : error ? (
+    <Message variant="danger">{error}</Message>
+  ) : (
+    <>
+      <h1>Order {order._id}</h1>
+      <Row>
+        <Col md={8}>
+          <ListGroup variant="flush">
+            <ListGroup.Item>
+              <h2>Shipping</h2>
+              <p>
+                <strong>Name: </strong> {order.user.name}
+              </p>
+              <p>
+                <strong>Email: </strong>{" "}
+                <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
+              </p>
+              <p>
+                <strong>Address:</strong>
+                {order.shippingAddress.address}, {order.shippingAddress.city}{" "}
+                {order.shippingAddress.postalCode},{" "}
+                {order.shippingAddress.country}
+              </p>
+              {order.isDelivered ? (
+                <Message variant="success">
+                  Delivered on {order.deliveredAt}
+                </Message>
+              ) : (
+                <Message variant="danger">Not Delivered</Message>
+              )}
+            </ListGroup.Item>
+
+            <ListGroup.Item>
+              <h2>Payment Method</h2>
+              <p>
+                <strong>Method: </strong>
+                {order.paymentMethod}
+              </p>
+              {order.isPaid ? (
+                <Message variant="success">Paid on {order.paidAt}</Message>
+              ) : (
+                <Message variant="danger">Not Paid</Message>
+              )}
+            </ListGroup.Item>
+
+            <ListGroup.Item>
+              <h2>Order Items</h2>
+              {order.orderItems.length === 0 ? (
+                <Message>Order is empty</Message>
+              ) : (
+                <ListGroup variant="flush">
+                  {order.orderItems.map((item, index) => (
+                    <ListGroup.Item key={index}>
+                      <Row>
+                        <Col md={1}>
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fluid
+                            rounded
+                          />
+                        </Col>
+                        <Col>
+                          <Link to={`/product/${item.product}`}>
+                            {item.name}
+                          </Link>
+                        </Col>
+                        <Col md={4}>
+                          {item.qty} x ${item.price} = ${item.qty * item.price}
+                        </Col>
+                      </Row>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              )}
+            </ListGroup.Item>
+          </ListGroup>
+        </Col>
+        <Col md={4}>
+          <Card>
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                <h2>Order Summary</h2>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
+                  <Col>Items</Col>
+                  <Col>${order.itemsPrice}</Col>
+                </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
+                  <Col>Shipping</Col>
+                  <Col>${order.shippingPrice}</Col>
+                </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
+                  <Col>Tax</Col>
+                  <Col>${order.taxPrice}</Col>
+                </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
+                  <Col>Total</Col>
+                  <Col>${order.totalPrice}</Col>
+                </Row>
+              </ListGroup.Item>
+              {/* PAY ORDER PLACEHOLDER */}
+              {/* {MARK AS DELIVERED PLACEHOLDER} */}
+            </ListGroup>
+          </Card>
+        </Col>
+      </Row>
+    </>
+  );
+};
+
+export default OrderScreen;
+
+in frontend/src/index.js
+
+import OrderScreen from "./screens/OrderScreen";
+in <PrivateRoutes>
+  <Route path="/order/:id" element={<OrderScreen />} />
+
+
+42. set expirationTime to localStorage
+
+the user wont be automatically logged out if exp is not set
+else the toke will be expired
+if not set the createOrder route will fail as it is a protected route and requires token to function
+
+in frontend/App.js
+
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { logout } from './slices/authSlice';
+
+above return 
+ const dispatch = useDispatch();
+
+  useEffect(() => {
+    const expirationTime = localStorage.getItem("expirationTime");
+    if (expirationTime) {
+      const currentTime = new Date().getTime();
+      if (currentTime > expirationTime) {
+        dispatch(logout());
+      }
+    }
+  }, [dispatch]);
+
+in frontend/src/slices/authSlice.js
+
+in setCredentials
+  const expirationTime = new Date().getTime() + 60 * 60 * 1000; // 1 hour
+  localStorage.setItem("expirationTime", expirationTime);
+
+
+43. paypal setup
+
+from Paypal developer page
+create paypal account 
+get ClientId from App & Credentials 
+
+in root/.env
+PAYPAL_CLIENT_ID=PAYPAL Clint Id
+
+in backend/controller/orderController.js
+
+const updateOrderToPaid = asyncHandler(async (req, res) => {
+  res.send('update order to paid');
+  const order = await Order.findById(req.params.id);
+
+  if (order) {
+    order.isPaid = true;
+    order.paidAt = Date.now();
+    order.paymentResult = {
+      id: req.body.id,
+      status: req.body.status,
+      update_time: req.body.update_time,
+      email_address: req.body.payer.email_address,
+    };
+
+    const updatedOrder = await order.save();
+
+    res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+}); 
+
+
+44. paypal integration
+
+in frontend 
+
+npm i import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+
+in frontend/src/index.js
+
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+remove
+  <PayPalScriptProvider deferLoading={true}>
+    <RouterProvider router={router} />
+  </PayPalScriptProvider>
+
+  <PayPalScriptProvider deferLoading={true}>
+    <RouterProvider router={router} />
+  </PayPalScriptProvider>
+
+in frontend/src/slices/orderApiSlice.js
+
+in reducers
+  payOrder: builder.mutation({
+    query: ({ orderId, details }) => ({
+      url: `${ORDERS_URL}/${orderId}/pay`,
+      method: "PUT",
+      body: details,
+    }),
+  }),
+  getPaypalClientId: builder.query({
+    query: () => ({
+      url: PAYPAL_URL,
+    }),
+    keepUnusedDataFor: 5,
+  }),
+
+export const {
+  useCreateOrderMutation,
+  useGetOrderDetailsQuery,
+  usePayOrderMutation,
+  useGetPaypalClientIdQuery,
+} = orderApiSlice;
+
+in frontend/src/screens/OrderScreen.jsx
+
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import {
+  useGetOrderDetailsQuery,
+  usePayOrderMutation,
+  useGetPaypalClientIdQuery,
+} from "../slices/orderApiSlice";
+
+in OrderScreen 
+
+above return replace whole with
+
+const { id: orderId } = useParams();
+
+  const {
+    data: order,
+    refetch,
+    isLoading,
+    error,
+  } = useGetOrderDetailsQuery(orderId);
+
+  const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+
+  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
+
+  const {
+    data: paypal,
+    isLoading: loadingPayPal,
+    error: errorPayPal,
+  } = useGetPaypalClientIdQuery();
+
+  useEffect(() => {
+    if (!errorPayPal && !loadingPayPal && paypal.clientId) {
+      const loadPaypalScript = async () => {
+        paypalDispatch({
+          type: "resetOptions",
+          value: {
+            "client-id": paypal.clientId,
+            currency: "USD",
+          },
+        });
+        paypalDispatch({ type: "setLoadingStatus", value: "pending" });
+      };
+      if (order && !order.isPaid) {
+        if (!window.paypal) {
+          loadPaypalScript();
+        }
+      }
+    }
+  }, [errorPayPal, loadingPayPal, order, paypal, paypalDispatch]);
+
+  function onApprove(data, actions) {
+    return actions.order.capture().then(async function (details) {
+      try {
+        await payOrder({ orderId, details });
+        refetch();
+        toast.success("Order is paid");
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    });
+  }
+
+  async function onApproveTest() {
+    await payOrder({ orderId, details: { payer: {} } });
+    refetch();
+
+    toast.success("Order is paid");
+  }
+
+  function onError(err) {
+    toast.error(err.message);
+  }
+
+  function createOrder(data, actions) {
+    return actions.order
+      .create({
+        purchase_units: [
+          {
+            amount: { value: order.totalPrice },
+          },
+        ],
+      })
+      .then((orderID) => {
+        return orderID;
+      });
+  }
+
+under totoalprice
+
+{!order.isPaid && (
+  <ListGroup.Item>
+    {loadingPay && <Loader />}
+
+    {isPending ? (
+      <Loader />
+    ) : (
+      <div>
+        <Button
+          style={{ marginBottom: "10px" }}
+          onClick={onApproveTest}
+        >
+          Test Pay Order
+        </Button>
+
+        <div>
+          <PayPalButtons
+            createOrder={createOrder}
+            onApprove={onApprove}
+            onError={onError}
+          ></PayPalButtons>
+        </div>
+      </div>
+    )}
+  </ListGroup.Item>
+)}
+
+
+45. ProfileScreen
+
+in frontend/src/slices/userApiSlice.js
+
+in endpoinnts
+
+profile: builder.mutation({
+  query: (data) => ({
+    url: `${USERS_URL}/profile`,
+    method: "PUT",
+    body: data,
+  }),
+}),
+
+export useProfileMutation
+
+in frontend/src/slices/userApiSlice.js
+
+getMyOrders: builder.query({
+  query: () => ({
+    url: `${ORDERS_URL}/myorders`,
+  }),
+  keepUnusedDataFor: 5,
+}),
+
+export useGetMyOrdersQuery
+
+in frontend/src/screens > ProfileScreen.jsx
+
+import React, { useEffect, useState } from "react";
+import { Table, Form, Button, Row, Col } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { FaTimes } from "react-icons/fa";
+
+import { toast } from "react-toastify";
+import Message from "../components/Message";
+import Loader from "../components/Loader";
+import { useProfileMutation } from "../slices/userApiSlice";
+import { useGetMyOrdersQuery } from "../slices/orderApiSlice";
+import { setCredentials } from "../slices/authSlice";
+
+const ProfileScreen = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const { data: orders, isLoading, error } = useGetMyOrdersQuery();
+
+  // eslint-disable-next-line no-unused-vars
+  const [updateProfile, { isLoading: loadingUpdateProfile }] =
+    useProfileMutation();
+
+  useEffect(() => {
+    setName(userInfo.name);
+    setEmail(userInfo.email);
+  }, [userInfo.email, userInfo.name]);
+
+  const dispatch = useDispatch();
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+    } else {
+      try {
+        const res = await updateProfile({
+          _id: userInfo._id,
+          name,
+          email,
+          password,
+        }).unwrap();
+        dispatch(setCredentials({ ...res }));
+        toast.success("Profile updated successfully");
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
+
+  return (
+    <Row>
+      <Col md={3}>
+        <h2>User Profile</h2>
+
+        <Form onSubmit={submitHandler}>
+          <Form.Group className="my-2" controlId="name">
+            <Form.Label>Name</Form.Label>
+            <Form.Control
+              type="name"
+              placeholder="Enter name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+
+          <Form.Group className="my-2" controlId="email">
+            <Form.Label>Email Address</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Enter email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+
+          <Form.Group className="my-2" controlId="password">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+
+          <Form.Group className="my-2" controlId="confirmPassword">
+            <Form.Label>Confirm Password</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Confirm password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+
+          <Button type="submit" variant="primary">
+            Update
+          </Button>
+        </Form>
+      </Col>
+      <Col md={9}>
+        <h2>My Orders</h2>
+        {isLoading ? (
+          <Loader />
+        ) : error ? (
+          <Message variant="danger">
+            {error?.data?.message || error.error}
+          </Message>
+        ) : (
+          <Table striped table hover responsive className="table-sm">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>DATE</th>
+                <th>TOTAL</th>
+                <th>PAID</th>
+                <th>DELIVERED</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order._id}>
+                  <td>{order._id}</td>
+                  <td>{order.createdAt.substring(0, 10)}</td>
+                  <td>{order.totalPrice}</td>
+                  <td>
+                    {order.isPaid ? (
+                      order.paidAt.substring(0, 10)
+                    ) : (
+                      <FaTimes style={{ color: "red" }} />
+                    )}
+                  </td>
+                  <td>
+                    {order.isDelivered ? (
+                      order.deliveredAt.substring(0, 10)
+                    ) : (
+                      <FaTimes style={{ color: "red" }} />
+                    )}
+                  </td>
+                  <td>
+                    <LinkContainer to={`/order/${order._id}`}>
+                      <Button className="btn-sm" variant="light">
+                        Details
+                      </Button>
+                    </LinkContainer>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+      </Col>
+    </Row>
+  );
+};
+
+export default ProfileScreen;
+
+in frontend/src/index.js
+
+import ProfileScreen from "./screens/ProfileScreen";
+in PrivateRoutes
+  <Route path="/profile" element={<ProfileScreen />} />
+
+
+46. admin orderlist
+
+in frontend/src/components > admin > AdminRoute.jsx
+
+import { Navigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+const AdminRoute = () => {
+  const { userInfo } = useSelector((state) => state.auth);
+  return userInfo && userInfo.isAdmin ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/login" replace />
+  );
+};
+export default AdminRoute;
+
+in frontend/src/index.js
+
+import AdminRoute from "./components/admin/AdminRoute";
+under PrivateRoute
+  <Route path="" element={<AdminRoute />}>
+    <Route path="/admin/orderslist" element={<OrderListScreen />} />
+  </Route>
+
+in frontend/src/screens > OrderListScreen.jsx
+
+import React from "react";
+
+const OrderListScreen = () => {
+  return (
+    <div>
+      <h1>Order List</h1>
+    </div>
+  );
+};
+
+export default OrderListScreen;
+
+in frontend/src/components/Header.jsx
+
+in navbar beside adminmenu NavDropdown
+
+  {userInfo && userInfo.isAdmin && (
+    <NavDropdown title="Admin" id="adminmenu">
+      <LinkContainer to="/admin/userslist">
+        <NavDropdown.Item>Users</NavDropdown.Item>
+      </LinkContainer>
+      <LinkContainer to="/admin/productslist">
+        <NavDropdown.Item>Products</NavDropdown.Item>
+      </LinkContainer>
+      <LinkContainer to="/admin/orderslist">
+        <NavDropdown.Item>Orders</NavDropdown.Item>
+      </LinkContainer>
+    </NavDropdown>
+  )}
+
+
+47. order Controller and orderlist
+
+in backend/controllers/orderController.js
+
+const getOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({}).populate("user", "id name");
+  res.json(orders);
+});
+export getOrders,
+
+in frontend/src/slices/orderApiSlice.js
+add action creater
+  getOrders: builder.query({
+    query: () => ({
+      url: ORDERS_URL,
+    }),
+    keepUnusedDataFor: 5,
+  }),
+export useGetOrdersQuery
+
+in frontend/src/screens/OrderListScreen.jsx
+replace whole with 
+import { LinkContainer } from "react-router-bootstrap";
+import { Table, Button } from "react-bootstrap";
+import { FaTimes } from "react-icons/fa";
+import Message from "../components/Message";
+import Loader from "../components/Loader";
+import { useGetOrdersQuery } from "../slices/orderApiSlice";
+
+const OrderListScreen = () => {
+  const { data: orders, isLoading, error } = useGetOrdersQuery();
+
+  return (
+    <>
+      <h1>Orders</h1>
+      {isLoading ? (
+        <Loader />
+      ) : error ? (
+        <Message variant="danger">
+          {error?.data?.message || error.error}
+        </Message>
+      ) : (
+        <Table striped bordered hover responsive className="table-sm">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>USER</th>
+              <th>DATE</th>
+              <th>TOTAL</th>
+              <th>PAID</th>
+              <th>DELIVERED</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((order) => (
+              <tr key={order._id}>
+                <td>{order._id}</td>
+                <td>{order.user && order.user.name}</td>
+                <td>{order.createdAt.substring(0, 10)}</td>
+                <td>${order.totalPrice}</td>
+                <td>
+                  {order.isPaid ? (
+                    order.paidAt.substring(0, 10)
+                  ) : (
+                    <FaTimes style={{ color: "red" }} />
+                  )}
+                </td>
+                <td>
+                  {order.isDelivered ? (
+                    order.deliveredAt.substring(0, 10)
+                  ) : (
+                    <FaTimes style={{ color: "red" }} />
+                  )}
+                </td>
+                <td>
+                  <LinkContainer to={`/order/${order._id}`}>
+                    <Button variant="light" className="btn-sm">
+                      Details
+                    </Button>
+                  </LinkContainer>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
+    </>
+  );
+};
+
+export default OrderListScreen;
+
+
+48. update order to delivered
+
+in backend/controllers/orderController.js
+
+const updateOrderToDelivered = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (order) {
+    order.isDelivered = true;
+    order.deliveredAt = Date.now();
+
+    const updatedOrder = await order.save();
+
+    res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error("Order not found");
+  }
+});
+
+in frontend/src/slices/orderApiSlice.js
+
+add action creator
+updateOrderToDelivered: builder.mutation({
+  query: (id) => ({
+    url: `${ORDERS_URL}/${id}/delivered`,
+    method: "PUT",
+  }),
+}),
+export useUpdateOrderToDeliveredMutation
+
+in frontend/src/screens/OrderScreen.jsx
+
+  const [updateOrderToDelivered, { isLoading: loadingDeliver }] =
+    useUpdateOrderToDeliveredMutation();
+
+  const deliverHandler = async () => {
+    try {
+      await updateOrderToDelivered(orderId);
+      refetch();
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
+  };
+
+
+under Order price Card
+
+{loadingDeliver && <Loader />}
+
+{userInfo &&
+  userInfo.isAdmin &&
+  order.isPaid &&
+  !order.isDelivered && (
+    <ListGroup.Item>
+      <Button
+        type="button"
+        className="btn btn-block"
+        onClick={deliverHandler}
+        style={{ backgroundColor: "black", color: "white" }}
+      >
+        Mark As Delivered
+      </Button>
+    </ListGroup.Item>
+  )}
+
+
+49. list products to admin
+
+in frontend/src/screens/admin/ProductsListScreen.jsx
+
+import { LinkContainer } from "react-router-bootstrap";
+import { Table, Button, Row, Col } from "react-bootstrap";
+import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
+import Message from "../../components/Message";
+import Loader from "../../components/Loader";
+import { useGetProductsQuery } from "../../slices/productsApiSlice";
+
+const ProductListScreen = () => {
+  const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+
+  const deleteHandler = () => {
+    console.log("delete");
+  };
+
+  return (
+    <>
+      <Row className="align-items-center">
+        <Col>
+          <h1>Products</h1>
+        </Col>
+        <Col className="text-end">
+          <Button className="btn-sm m-3">
+            <FaPlus /> Create Product
+          </Button>
+        </Col>
+      </Row>
+
+      {isLoading ? (
+        <Loader />
+      ) : error ? (
+        <Message variant="danger">{error}</Message>
+      ) : (
+        <>
+          <Table striped bordered hover responsive className="table-sm">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>PRICE</th>
+                <th>CATEGORY</th>
+                <th>BRAND</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((product) => (
+                <tr key={product._id}>
+                  <td>{product._id}</td>
+                  <td>{product.name}</td>
+                  <td>${product.price}</td>
+                  <td>{product.category}</td>
+                  <td>{product.brand}</td>
+                  <td>
+                    <LinkContainer to={`/admin/product/${product._id}/edit`}>
+                      <Button variant="light" className="btn-sm mx-2">
+                        <FaEdit />
+                      </Button>
+                    </LinkContainer>
+                    <Button
+                      variant="danger"
+                      className="btn-sm"
+                      onClick={() => deleteHandler(product._id)}
+                    >
+                      <FaTrash style={{ color: "white" }} />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+          {/* PAGINATE PLACEHOLDER */}
+        </>
+      )}
+    </>
+  );
+};
+
+export default ProductListScreen;
+
+
+50. create product 
+
+in backend/controllers/productController.js
+
+const createProduct = asyncHandler(async (req, res) => {
+  const product = new Product({
+    name: "Sample name",
+    price: 0,
+    user: req.user._id,
+    image: "/images/sample.jpg",
+    brand: "Sample brand",
+    category: "Sample category",
+    countInStock: 0,
+    numReviews: 0,
+    description: "Sample description",
+  });
+
+  const createdProduct = await product.save();
+  res.status(201).json(createdProduct);
+});
+
+export createProduct
+
+in backend/controllers/productRoutes.js
+
+import { protect, admin } from "../middleware/authMiddleware.js";
+router.route("/").get(getProducts).post(protect, admin, createProduct);
+
+in frontend/src/slices/productApiSlice.js
+add action creater
+createProduct: builder.mutation({
+  query: () => ({
+    url: `${PRODUCTS_URL}`,
+    method: "POST",
+  }),
+  invalidatesTags: ["Product"],
+}),
+
+export useCreateOrderMutation
+
+import {
+  useGetProductsQuery,
+  useCreateProductMutation,
+} from "../../slices/productsApiSlice";
+const [createProduct, { isLoading: loadingCreate }] =
+    useCreateProductMutation();
+
+  const createProductHandler = async () => {
+    if (window.confirm("Are you sure you want to create a new product?")) {
+      try {
+        await createProduct();
+        refetch();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
+
+add onClick={createProductHandler} to Create Product button
+
+
+51. edit product
+
+in backendcontrollers/productController.js
+
+// @desc    Update a product
+// @route   PUT /api/products/:id
+// @access  Private/Admin
+const updateProduct = asyncHandler(async (req, res) => {
+  const { name, price, description, image, brand, category, countInStock } =
+    req.body;
+
+  const product = await Product.findById(req.params.id);
+
+  if (product) {
+    product.name = name;
+    product.price = price;
+    product.description = description;
+    product.image = image;
+    product.brand = brand;
+    product.category = category;
+    product.countInStock = countInStock;
+
+    const updatedProduct = await product.save();
+    res.json(updatedProduct);
+  } else {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+});
+
+export { getProducts, getProductById, createProduct, updateProduct };
+
+in backend/routes/productRoutes.js
+
+import updateProduct from "../controllers/productController.js";
+router.route("/:id").get(getProductById).put(protect, admin, updateProduct);
+
+in frontend/src/slices/productApiSlice.js
+add action creator
+
+updateProduct: builder.mutation({
+  query: (data) => ({
+    url: `${PRODUCTS_URL}/${data.productId}`,
+    method: "PUT",
+    body: data,
+  }),
+  invalidatesTags: ["Product"],
+}),
+
+export useUpdateProductMutation
+
+in frontend/src/screens/admin > productEditScreen.jsx
+
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Form, Button } from "react-bootstrap";
+import Message from "../../components/Message";
+import Loader from "../../components/Loader";
+import FormContainer from "../../components/FormContainer";
+import { toast } from "react-toastify";
+import {
+  useGetProductDetailsQuery,
+  useUpdateProductMutation,
+} from "../../slices/productsApiSlice";
+
+const ProductEditScreen = () => {
+  const { id: productId } = useParams();
+
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState(0);
+  const [image, setImage] = useState("");
+  const [brand, setBrand] = useState("");
+  const [category, setCategory] = useState("");
+  const [countInStock, setCountInStock] = useState(0);
+  const [description, setDescription] = useState("");
+
+  const {
+    data: product,
+    isLoading,
+    refetch,
+    error,
+  } = useGetProductDetailsQuery(productId);
+
+  const [updateProduct, { isLoading: loadingUpdate }] =
+    useUpdateProductMutation();
+
+  const navigate = useNavigate();
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      await updateProduct({
+        productId,
+        name,
+        price,
+        image,
+        brand,
+        category,
+        description,
+        countInStock,
+      });
+      toast.success("product updated successfully");
+      refetch();
+      navigate("/admin/productslist");
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
+  };
+
+  useEffect(() => {
+    if (product) {
+      setName(product.name);
+      setPrice(product.price);
+      setImage(product.image);
+      setBrand(product.brand);
+      setCategory(product.category);
+      setCountInStock(product.countInStock);
+      setDescription(product.description);
+    }
+  }, [product]);
+
+  return (
+    <>
+      <Link to="/admin/productslist" className="btn btn-light my-3">
+        Go Back
+      </Link>
+      <FormContainer>
+        <h1>Edit Product</h1>
+        {loadingUpdate && <Loader />}
+        {isLoading ? (
+          <Loader />
+        ) : error ? (
+          <Message variant="danger">{error}</Message>
+        ) : (
+          <Form onSubmit={submitHandler}>
+            <Form.Group controlId="name">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="name"
+                placeholder="Enter name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="price">
+              <Form.Label>Price</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter price"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            {/* IMAGE INPUT PLACEHOLDER */}
+
+            <Form.Group controlId="brand">
+              <Form.Label>Brand</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter brand"
+                value={brand}
+                onChange={(e) => setBrand(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="countInStock">
+              <Form.Label>Count In Stock</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter countInStock"
+                value={countInStock}
+                onChange={(e) => setCountInStock(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="category">
+              <Form.Label>Category</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="description">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Button
+              type="submit"
+              variant="primary"
+              style={{ marginTop: "1rem" }}
+            >
+              Update
+            </Button>
+          </Form>
+        )}
+      </FormContainer>
+    </>
+  );
+};
+
+export default ProductEditScreen;
+
+in frontend/src/index.js
+
+import ProductEditScreen from "./screens/admin/ProductEditScreen";
+in admin routes
+  <Route path="/admin/product/:id" element={<ProductEditScreen />} />
+
+
+52. multer setup and image upload
+
+in root 
+npm i multer
+
+in backend/routes > uploadRoutes.js
+
+import path from "path";
+import express from "express";
+import multer from "multer";
+const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename(req, file, cb) {
+    cb(
+      null,
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+    );
+  },
+});
+
+function checkFileType(file, cb) {
+  const filetypes = /jpg|jpeg|png/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (extname && mimetype) {
+    return cb(null, true);
+  } else {
+    cb({ message: "Images only!" });
+  }
+}
+
+const upload = multer({
+  storage,
+});
+
+router.post("/", upload.single("image"), (req, res) => {
+  console.log(req.file);
+  res.send({
+    message: "Image uploaded successfully",
+    image: `/${req.file.path}`,
+  });
+});
+
+export default router;
+
+in backend/server.js
+
+import uploadRoutes from "./routes/uploadRoutes.js";
+app.use("/api/upload", uploadRoutes);
+const __dirname = path.resolve();
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
+in frontend/src/slices/productApiSlice.js
+
+import UPLOAD_URL from "constants.js"
+in endpoints
+  uploadProductImage: builder.mutation({
+    query: (data) => ({
+      url: UPLOAD_URL,
+      method: "POST",
+      body: data,
+    }),
+  })
+
+export useUploadProductImageMutation
+
+in frontend/src/screens/admin/ProductEditSceeen.jsx
+
+import useUploadProductImageMutation
+const [uploadProductImage, { isLoading: loadingUpload }] = useUploadProductImageMutation();
+
+const uploadFileHandler = async (e) => {
+  const formData = new FormData();
+  formData.append("image", e.target.files[0]);
+  try {
+    const res = await uploadProductImage(formData).unwrap();
+    toast.success(res.message);
+    setImage(res.image);
+  } catch (err) {
+    toast.error(err?.data?.message || err.error);
+  }
+};
+
+in form image section
+  <Form.Group controlId="image">
+    <Form.Label>Image</Form.Label>
+    <Form.Control
+      type="text"
+      placeholder="Enter image url"
+      value={image}
+      onChange={(e) => setImage(e.target.value)}
+    ></Form.Control>
+    <Form.Control
+      label="Choose File"
+      onChange={uploadFileHandler}
+      type="file"
+    ></Form.Control>
+    {loadingUpload && <Loader />}
+  </Form.Group>
+
+
+53. delete product
+
+in backend/controllers/productController.js
+
+// @desc    Delete a product
+// @route   DELETE /api/products/:id
+// @access  Private/Admin
+const deleteProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+
+  if (product) {
+    await Product.deleteOne({ _id: product._id });
+    res.json({ message: "Product removed" });
+  } else {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+});
+
+export deleteProduct
+
+in backend/controllers/productController.js
+
+import deleteProduct 
+router.route("/:id").delete(protect, admin, deleteProduct);
+
+in frontend/src/slices/productApiSlice.js
+
+  deleteProduct: builder.mutation({
+    query: (productId) => ({
+      url: `${PRODUCTS_URL}/${productId}`,
+      method: "DELETE",
+    }),
+  }),
+export useDeleteProductMutation
+
+in frontend/src/screens/admin/ProductListScreen.jsx
+
+import useDeleteProductMutation
+
+  const [deleteProduct, { isLoading: loadingDelete }] =
+    useDeleteProductMutation();
+
+   const deleteHandler = async (id) => {
+    if (window.confirm("Are you sure")) {
+      try {
+        await deleteProduct(id);
+        toast.success("Product deleted");
+        refetch();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
+
+in return include
+  {loadingCreate && <Loader />}
+  {loadingDelete && <Loader />}
+
+
+54. backend user routes
+in backend/routes/userRoutes.js
+
+const getUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({});
+  res.json(users);
+});
+
+const getUserById = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id).select("-password");
+
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
+const updateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.isAdmin = Boolean(req.body.isAdmin);
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    if (user.isAdmin) {
+      res.status(400);
+      throw new Error("Can not delete admin user");
+    }
+    await User.deleteOne({ _id: user._id });
+    res.json({ message: "User removed" });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
+export {
+  authUser,
+  registerUser,
+  getUserProfile,
+  updateUserProfile,
+  getUsers,
+  deleteUser,
+  getUserById,
+  updateUser,
+  logoutUser,
+};
+
+
+55. list users to admin
+
+in frontend/src/slices/userApiSlice.js
+add action creator
+
+  getUsers: builder.query({
+    query: () => ({
+      url: USERS_URL,
+    }),
+    providesTags: ["User"],
+    keepUnusedDataFor: 5,
+  }),
+
+export useGetUsersery
+
+in frontend/src/screens/admin > UsersListScreen.jsx
+
+import React from "react";
+import { LinkContainer } from "react-router-bootstrap";
+import { Table, Button } from "react-bootstrap";
+import { FaTrash, FaEdit, FaCheck, FaTimes } from "react-icons/fa";
+import Message from "../../components/Message";
+import Loader from "../../components/Loader";
+import { useGetUsersQuery } from "../../slices/usersApiSlice";
+
+const UserListScreen = () => {
+  const { data: users, refetch, isLoading, error } = useGetUsersQuery();
+
+  const deleteHandler = async (id) => {
+    console.log("delete");
+  };
+
+  return (
+    <>
+      <h1>Users</h1>
+      {isLoading ? (
+        <Loader />
+      ) : error ? (
+        <Message variant="danger">
+          {error?.data?.message || error.error}
+        </Message>
+      ) : (
+        <Table striped bordered hover responsive className="table-sm">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>NAME</th>
+              <th>EMAIL</th>
+              <th>ADMIN</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user._id}>
+                <td>{user._id}</td>
+                <td>{user.name}</td>
+                <td>
+                  <a href={`mailto:${user.email}`}>{user.email}</a>
+                </td>
+                <td>
+                  {user.isAdmin ? (
+                    <FaCheck style={{ color: "green" }} />
+                  ) : (
+                    <FaTimes style={{ color: "red" }} />
+                  )}
+                </td>
+                <td>
+                  {!user.isAdmin && (
+                    <>
+                      <LinkContainer
+                        to={`/admin/user/${user._id}/edit`}
+                        style={{ marginRight: "10px" }}
+                      >
+                        <Button variant="light" className="btn-sm">
+                          <FaEdit />
+                        </Button>
+                      </LinkContainer>
+                      <Button
+                        variant="danger"
+                        className="btn-sm"
+                        onClick={() => deleteHandler(user._id)}
+                      >
+                        <FaTrash style={{ color: "white" }} />
+                      </Button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
+    </>
+  );
+};
+
+export default UserListScreen;
+
+in frontend/src/index.js
+
+import UserListScreen from "./screens/admin/UserListScreen";
+in admin routes
+  <Route path="/admin/userslist" element={<UserListScreen />} />
+
+
+56. delete user
+
+in frontend/src/slices/userApiSlice.js
+add mutation
+
+deleteUser: builder.mutation({
+  query: (userId) => ({
+    url: `${USERS_URL}/${userId}`,
+    method: "DELETE",
+  }),
+}),
+
+export useDeleteUserMutation
+
+in frontend/src/screens/admin/UserListScreen.jsx
+
+import useDeleteUserMutation
+const [deleteUser] = useDeleteUserMutation();
+
+  const deleteHandler = async (id) => {
+    if (window.confirm("Are you sure")) {
+      try {
+        await deleteUser(id);
+        toast.success("User deleted successfully");
+        refetch();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
+
+  
+57. update users
+
+in frontend/src/slices/usersApiSlice.js
+add action creators
+
+getUserDetails: builder.query({
+      query: (id) => ({
+        url: `${USERS_URL}/${id}`,
+      }),
+      keepUnusedDataFor: 5,
+    }),
+    updateUser: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/${data.userId}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+export { useGetUserDetailsQuery, useUpdateUserMutation }
+
+in frontend/src/screens/admin > UserEditScreen.jsx
+
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Form, Button } from "react-bootstrap";
+import Message from "../../components/Message";
+import Loader from "../../components/Loader";
+import FormContainer from "../../components/FormContainer";
+import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
+import {
+  useGetUserDetailsQuery,
+  useUpdateUserMutation,
+} from "../../slices/usersApiSlice";
+
+const UserEditScreen = () => {
+  const { id: userId } = useParams();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const {
+    data: user,
+    isLoading,
+    error,
+    refetch,
+  } = useGetUserDetailsQuery(userId);
+
+  const [updateUser] = useUpdateUserMutation();
+
+  const navigate = useNavigate();
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      await updateUser({ userId, name, email, isAdmin });
+      toast.success("user updated successfully");
+      refetch();
+      navigate("/admin/userslist");
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+      setEmail(user.email);
+      setIsAdmin(user.isAdmin);
+    }
+  }, [user]);
+
+  return (
+    <>
+      <Link to="/admin/userlist" className="btn btn-light my-3">
+        Go Back
+      </Link>
+      <FormContainer>
+        <h1>Edit User</h1>
+        {isLoading ? (
+          <Loader />
+        ) : error ? (
+          <Message variant="danger">
+            {error?.data?.message || error.error}
+          </Message>
+        ) : (
+          <Form onSubmit={submitHandler}>
+            <Form.Group className="my-2" controlId="name">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="name"
+                placeholder="Enter name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group className="my-2" controlId="email">
+              <Form.Label>Email Address</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group className="my-2" controlId="isadmin">
+              <Form.Check
+                type="checkbox"
+                label="Is Admin"
+                checked={isAdmin}
+                onChange={(e) => setIsAdmin(e.target.checked)}
+              ></Form.Check>
+            </Form.Group>
+
+            <Button type="submit" variant="primary">
+              Update
+            </Button>
+          </Form>
+        )}
+      </FormContainer>
+    </>
+  );
+};
+
+export default UserEditScreen;
+
+in frontend/src/index.js
+
+import UserEditScreen from "./screens/admin/UserEditScreen";
+in admin routes
+  <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
+
+
+58. product reviews
+
+in backend/controllers/productController.js
+
+const createProductReview = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body;
+
+  const product = await Product.findById(req.params.id);
+
+  if (product) {
+    const alreadyReviewed = product.reviews.find(
+      (r) => r.user.toString() === req.user._id.toString()
+    );
+
+    if (alreadyReviewed) {
+      res.status(400);
+      throw new Error("Product already reviewed");
+    }
+
+    const review = {
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+      user: req.user._id,
+    };
+
+    product.reviews.push(review);
+
+    product.numReviews = product.reviews.length;
+
+    product.rating =
+      product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+      product.reviews.length;
+
+    await product.save();
+    res.status(201).json({ message: "Review added" });
+  } else {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+});
+
+export createReview
+
+in backend/routes/productRoutes.js
+
+import createProductReview,
+
+router.route("/:id/reviews").post(protect, createProductReview);
+
+in frontend/src/slices/productApiSlice.js
+
+  createReview: builder.mutation({
+    query: (data) => ({
+      url: `${PRODUCTS_URL}/${data.productId}/reviews`,
+      method: "POST",
+      body: data,
+    }),
+  }),
+
+export useCreateReviewMutation
+
+in frontend/src/screens/ProductScreen.jsx
+
+import useCreateReviewMutation
+const [rating, setRating] = useState(0);
+const [comment, setComment] = useState("");
+const { userInfo } = useSelector((state) => state.auth);
+
+  const [createReview, { isLoading: loadingProductReview }] =
+    useCreateReviewMutation();
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      await createReview({
+        productId,
+        rating,
+        comment,
+      }).unwrap();
+      refetch();
+      toast.success("Review created successfully");
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
+  };
+
+  under product cards
+
+  <Row className="review">
+    <Col md={6}>
+      <h2>Reviews</h2>
+      {product.reviews.length === 0 && <Message>No Reviews</Message>}
+      <ListGroup variant="flush">
+        {product.reviews.map((review) => (
+          <ListGroup.Item key={review._id}>
+            <strong>{review.name}</strong>
+            <Rating value={review.rating} />
+            <p>{review.createdAt.substring(0, 10)}</p>
+            <p>{review.comment}</p>
+          </ListGroup.Item>
+        ))}
+        <ListGroup.Item>
+          <h2>Write a Customer Review</h2>
+
+          {loadingProductReview && <Loader />}
+
+          {userInfo ? (
+            <Form onSubmit={submitHandler}>
+              <Form.Group className="my-2" controlId="rating">
+                <Form.Label>Rating</Form.Label>
+                <Form.Control
+                  as="select"
+                  required
+                  value={rating}
+                  onChange={(e) => setRating(e.target.value)}
+                >
+                  <option value="">Select...</option>
+                  <option value="1">1 - Poor</option>
+                  <option value="2">2 - Fair</option>
+                  <option value="3">3 - Good</option>
+                  <option value="4">4 - Very Good</option>
+                  <option value="5">5 - Excellent</option>
+                </Form.Control>
+              </Form.Group>
+              <Form.Group className="my-2" controlId="comment">
+                <Form.Label>Comment</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  row="3"
+                  required
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
+              <Button
+                disabled={loadingProductReview}
+                type="submit"
+                variant="primary"
+              >
+                Submit
+              </Button>
+            </Form>
+          ) : (
+            <Message>
+              Please <Link to="/login">sign in</Link> to write a review
+            </Message>
+          )}
+        </ListGroup.Item>
+      </ListGroup>
+    </Col>
+  </Row>
+
+
+59. pagination
+
+in backend/controller/productController.js
+
+modify getProducts to 
+
+const getProducts = asyncHandler(async (req, res) => {
+  const pageSize = 2;
+  const page = Number(req.query.pageNumber) || 1;
+  const count = await Product.countDocuments();
+
+  const products = await Product.find()
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
+  res.json({ products, page, pages: Math.ceil(count / pageSize) });
+});
+
+in frontend/src/slices/productApiSlice.js
+
+modify getProducts() endpoint to 
+
+  getProducts: builder.query({
+    query: ({ pageNumber }) => ({
+      url: PRODUCTS_URL,
+      params: { pageNumber },
+    }),
+    keepUnusedDataFor: 5,
+    providesTags: ["Products"],
+  }),
+
+in frontend/src/index.js
+
+add route
+<Route path="/page/:pageNumber" element={<HomeScreen />} />
+in admin routes
+  <Route
+    path="/admin/productslist/:pageNumber"
+    element={<ProductsListScreen />}
+  />
+
+in frontend/src/components > Paginate.jsx
+
+import { Pagination } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+
+const Paginate = ({ pages, page, isAdmin = false }) => {
+  return (
+    pages > 1 && (
+      <Pagination>
+        {[...Array(pages).keys()].map((x) => (
+          <LinkContainer
+            key={x + 1}
+            to={!isAdmin ? `/page/${x + 1}` : `/admin/productslist/${x + 1}`}
+          >
+            <Pagination.Item active={x + 1 === page}>{x + 1}</Pagination.Item>  
+          </LinkContainer>
+        ))}
+      </Pagination>
+    )
+  );
+};
+
+export default Paginate;
+
+
+in frontend/src/screens/HomeScreen.jsx
+
+import Paginate from "../components/Paginate";
+
+in const HomeScreen
+
+  const { pageNumber } = useParams();
+  modify const { data: products, isLoading, error } = useGetProductsQuery(); to 
+  const { data, isLoading, error } = useGetProductsQuery({ pageNumber });
+  under last </Row> 
+  <Paginate pages={data.pages} page={data.page} />
+
+in frontend/src/screens/admin/ProductListScreen.jsx
+
+import Paginate from "../components/Paginate"
+
+in const ProductListScreen
+
+const { pageNumber } = useParams();
+  modify const { data: products, isLoading, error } = useGetProductsQuery(); to 
+  const { data, isLoading, error } = useGetProductsQuery({ pageNumber });
+  under last </Row> 
+  <Paginate pages={data.pages} page={data.page} isAdmin={true}/>
+
+
+60. search product
+
+in backend/controllers/productController.js
+
+modify getProducts with
+const getProducts = asyncHandler(async (req, res) => {
+  const pageSize = 4;
+  const page = Number(req.query.pageNumber) || 1;
+
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: 'i',
+        },
+      }
+    : {};
+
+  const count = await Product.countDocuments({ ...keyword });
+  const products = await Product.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
+  res.json({ products, page, pages: Math.ceil(count / pageSize) });
+});
+
+in frontend/src/slices/productApiSlice.js
+
+include keyword in query and params
+  getProducts: builder.query({
+    query: ({ keyword, pageNumber }) => ({
+      url: PRODUCTS_URL,
+      params: { keyword, pageNumber },
+    }),
+    keepUnusedDataFor: 5,
+    providesTags: ["Products"],
+  }),
+
+in frontend/src/screens/Paginate.jsx
+
+include keyword="" in destructuring
+{ pages, page, isAdmin = false, keyword = "" }
+modify to link to 
+to={
+  !isAdmin
+    ? keyword
+      ? `/search/${keyword}/page/${x + 1}`
+      : `/page/${x + 1}`
+    : `/admin/productlist/${x + 1}`
+}
+
+in frontend/src/index.js
+add routes
+<Route path="/search/:keyword" element={<HomeScreen />} />
+<Route
+  path="/search/:keyword/page/:pageNumber"
+  element={<HomeScreen />}
+/>
+
+in frontend/src/screens/HomeScreen.jsx
+include keyword in these 
+  const { keyword, pageNumber } = useParams();
+  const { data, isLoading, error } = useGetProductsQuery({
+    keyword,
+    pageNumber,
+  });
+  <Paginate
+    pages={data.pages}
+    page={data.page}
+    keyword={keyword ? keyword : ""}
+  />
+
+
+61. SearchBox component
+
+in frontend/src/components/SearchBox.jsx
+
+import React, { useState } from "react";
+import { Form, Button } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+const SearchBox = () => {
+  const navigate = useNavigate();
+  const { keyword: urlKeyword } = useParams();
+  const [keyword, setKeyword] = useState(urlKeyword);
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    if (keyword) {
+      setKeyword("");
+      navigate(`/search/${keyword.trim()}`);
+    } else {
+      navigate("/");
+    }
+  };
+
+  return (
+    <Form onSubmit={submitHandler} className="d-flex">
+      <Form.Control
+        type="text"
+        name="q"
+        onChange={(e) => setKeyword(e.target.value)}
+        value={keyword}
+        placeholder="Search Products..."
+        className="mr-sm-2 ml-sm-5"
+      ></Form.Control>
+      <Button type="submit" variant="outline-success" className="p-2 mx-2">
+        Search
+      </Button>
+    </Form>
+  );
+};
+
+export default SearchBox;
+
+in frontend/src/components/Header.jsx
+
+import SearchBox from "./SearchBox";
+beside cart add 
+  <SearchBox />
+
+in frontend/src/screens/HomeScreen.jsx
+
+in return add
+{keyword && (
+  <Link to="/" className="btn btn-light">
+    {" "}
+    Go Back{" "}
+  </Link>
+)}
+add {keyword ? "" : <h1>Latest Products</h1>}
+
+
+62. ProductCarousel
+
+in backend/controllers/productController.js
+
+add 
+// @desc    Get top rated products
+// @route   GET /api/products/top
+// @access  Public
+const getTopProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+  res.json(products);
+});
+
+export getTopProducts
+
+in backend/routes/productRoutes.js
+
+import getTopProducts
+add  route
+  router.get("/top", getTopProducts);
+
+in frontend/src/slices/productApiSlice.js
+add action creator
+getTopProducts: builder.query({
+  query: () => ({
+    url: `${PRODUCTS_URL}/top`,
+    method: "GET",
+  }),
+}),
+
+export useGetTopProductQuery
+
+in frontend/src/screens > ProductCarousel.jsx
+
+import { Link } from "react-router-dom";
+import { Carousel, Image } from "react-bootstrap";
+import Loader from "./Loader";
+import Message from "./Message";
+import { useGetTopProductsQuery } from "../slices/productsApiSlice";
+
+const ProductCarousel = () => {
+  const { data: products, isLoading, error } = useGetTopProductsQuery();
+
+  return isLoading ? (
+    <Loader />
+  ) : error ? (
+    <Message variant="danger">{error?.data?.message || error.error}</Message>
+  ) : (
+    <Carousel pause="hover" className="bg-black mb-4">
+      {products.map((product) => (
+        <Carousel.Item key={product._id}>
+          <Link to={`/product/${product._id}`}>
+            <Image src={product.image} alt={product.name} fluid />
+            <Carousel.Caption className="carousel-caption">
+              <h2 className="text-white text-right">
+                {product.name} (${product.price})
+              </h2>
+            </Carousel.Caption>
+          </Link>
+        </Carousel.Item>
+      ))}
+    </Carousel>
+  );
+};
+
+export default ProductCarousel;
+
+in frontend/src/index.js
+
+in routes
+  <Route path="/top" element={<ProductCarousel />} />
+
+in frontend/src/screens/HomeScreen.jsx
+
+import ProductCarousel from "../components/ProductCarousel";
+add <ProductCarousel />
+{keyword ? (
+  <Link to="/" className="btn btn-light">
+    {" "}
+    Go Back{" "}
+  </Link>
+) : (
+  <ProductCarousel />
+)}
+
+
+63. Page Titles
+
+in frontend
+npm i react-helmet-async
+
+in frontend/src/components > Meta.jsx
+
+import { Helmet } from 'react-helmet-async';
+
+const Meta = ({ title, description, keywords }) => {
+  return (
+    <Helmet>
+      <title>{title}</title>
+      <meta name='description' content={description} />
+      <meta name='keyword' content={keywords} />
+    </Helmet>
+  );
+};
+
+Meta.defaultProps = {
+  title: 'Welcome To ProShop',
+  description: 'We sell the best products for cheap',
+  keywords: 'electronics, buy electronics, cheap electroincs',
+};
+
+export default Meta;import { Helmet } from 'react-helmet-async';
+
+const Meta = ({ title, description, keywords }) => {
+  return (
+    <Helmet>
+      <title>{title}</title>
+      <meta name='description' content={description} />
+      <meta name='keyword' content={keywords} />
+    </Helmet>
+  );
+};
+
+Meta.defaultProps = {
+  title: 'Welcome To ProShop',
+  description: 'We sell the best products for cheap',
+  keywords: 'electronics, buy electronics, cheap electroincs',
+};
+
+export default Meta;
+
+in frontend/src/index.json
+
+import { HelmetProvider } from 'react-helmet-async';
+
+wrap Provider in HelmetProvider
+
+  <HelmetProvider>
+    <Provider store={store}>
+      <PayPalScriptProvider deferLoading={true}>
+        <RouterProvider router={router} />
+      </PayPalScriptProvider>
+    </Provider>
+  </HelmetProvider>
+
+in all screens
+
+import Meta
+
+in return where we load the data after no errors
+
+<Meta title={"Title we wanna give to the page"} />
+
+
+64. adding css and including it into file
+
+in frontend/src/assets > styles > index.css
+
+add css code here
+
+include it into required files
+
+
+65. prepare for deploy
+
+in .env
+PAGINATION_LIMIT=8
+change NODE_ENV to prooduction
+
+in backend/controllers/productVController.js
+
+in getProduct
+  const PAGINATION_LIMIT = process.env.PAGINATION_LIMIT || 8;
+  const pageSize = PAGINATION_LIMIT;
+
+in backend/server.js
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/build")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running....");
+  });
+}
+
+
+66. build script 
+
+in root/package.json
+
+in scripts
+
+  "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+
+
+67. deploy to render
+
+upload through github repo
+
+give name
+
+set Build command to 
+npm run build
+
+set start command to
+npm start
+
+
+68. small fixes
+
+  1. in frontend/src/components/SearchBox.jsx
+
+      set useStete(urlKeyword) to const [keyword, setKeyword] = useState(urlKeyword || "");
+
+  2. in backend/routes/uploadRoutes.js
+    
+    function fileFilter(req, file, cb) {
+      const filetypes = /jpe?g|png|webp/;
+      const mimetypes = /image\/jpe?g|image\/png|image\/webp/;
+
+      const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+      const mimetype = mimetypes.test(file.mimetype);
+
+      if (extname && mimetype) {
+        cb(null, true);
+      } else {
+        cb(new Error("Images only!"), false);
+      }
+    }
+
+    const upload = multer({ storage, fileFilter });
+    const uploadSingleImage = upload.single("image");
+
+    router.post("/", (req, res) => {
+      uploadSingleImage(req, res, function (err) {
+        if (err) {
+          res.status(400).send({ message: err.message });
+        }
+
+        try {
+          res.status(200).send({
+            message: "Image uploaded successfully",
+            image: `/${req.file.path}`,
+          });
+        } catch (error) {
+          res.status(400).send({ message: error.message });
+        }
+      });
+    });
+
+  3. in few screens replace error with error?.data?.message || error.error
+
+  4. in frontend/src/slices/authSlice.js
+      in logout() replace localStorage.removeItem('userInfo') with
+        localStorage.clear();
+
+  5. in frontend/src/slices/cartSlice.js
+      add action creator 
+        resetCart: (state) => (state = initialState),
+
+      in frontend/src/components/Header.jsx
+        import { resetCart } from "../slices/cartSlice";
+        afer dispatch(logout())
+        dispatch(resetCart());
+
+  6. in backend/middleware > checkObjectId.js
+
+      import { isValidObjectId } from "mongoose";
+
+      function checkObjectId(req, res, next) {
+        if (!isValidObjectId(req.params.id)) {
+          res.status(404);
+          throw new Error(`Invalid ObjectId of:  ${req.params.id}`);
+        }
+        next();
+      }
+
+      export default checkObjectId;
+
+    in backend/routes/productRoutes.js
+
+      import checkObjectId from "../middleware/checkObjectId.js";
+      id routes where endpoints where :id is included
+      add 
+        checkObjectId before method 
+        example: router.route("/:id").get(checkObjectId, getProductById);
+
+
+69. base url change
+
+in frontend/constants.js
+  replace BASE_URL with
+ export const BASE_URL = ""; // if using proxy
