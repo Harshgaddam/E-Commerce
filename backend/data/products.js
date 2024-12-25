@@ -25,7 +25,7 @@ const products = [
   },
   {
     name: "Galaxy S23 Ultra (Green, 256 GB, 12 GB)",
-    image: "/images/s23ultra.jpg",
+    image: "../../public/uploads/image-1698234252313.jpg",
     description:
       " The Samsung Galaxy S23 Ultra is the headliner of the S23 series. Specifications are top-notch including 6.8-inch Dynamic AMOLED display with 120Hz refresh rate, Snapdragon 8 Gen 2 processor, 5000mAh battery, up to 12gigs of RAM, and 1TB of storage",
     brand: "Samsung",
